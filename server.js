@@ -50,6 +50,7 @@ const port = process.env.PORT || 3001;
 // set-up the middlewares
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.static("./client/build"));
 
 // custom middleware: check if a given request is coming from an authenticated user
 const isLoggedIn = (req, res, next) => {
