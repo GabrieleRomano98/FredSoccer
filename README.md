@@ -1,1 +1,1 @@
-# ChessMate-code
+# Simple soccer tournament manager
