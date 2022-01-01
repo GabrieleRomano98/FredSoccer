@@ -3,7 +3,6 @@ import { Card, Spinner, Button, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 
-const cardStyle = {color: "#97fb57", backgroundColor: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
 const b1Style = {color: "#97fb57", background: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
 const b2Style = {color: "black", background: "#f6f2f2", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
 
@@ -48,7 +47,7 @@ function Squadra(props) {
                         {e}
                     </Button>
                 )}</Row>
-            {selected === 0 && <Card style={cardStyle}>
+            {selected === 0 && <Card className="cardStyle">
                 <h3 className="ml-4 mb-3">Statistiche</h3>
                 <Row>
                     <Col className="ml-5 mb-5">
@@ -66,7 +65,7 @@ function Squadra(props) {
             </Card>}
 
             {selected === 1 && partite.map(p => 
-                <Link to={'/Partita/'+p.id} id={p.id}><Card style={cardStyle} className="mb-4"> <Row>
+                <Link to={'/Partita/'+p.id} id={p.id}><Card className="mb-4 cardStyle"> <Row>
                     <Col xs="7">
                         <SquadraRow s={p.s1} />
                         <SquadraRow s={p.s2} />
@@ -82,7 +81,7 @@ function Squadra(props) {
             )}
 
             <div style={{display: "grid", gridTemplateColumns: "140px 140px", columnGap: "10px", justifyContent: "space-around"}}>{selected === 2 && giocatori.map(g => 
-                <Link to={'/Giocatore/'+g.id} id={g.id}><Card style={cardStyle} className="mb-4">
+                <Link to={'/Giocatore/'+g.id} id={g.id}><Card className="mb-4 cardStyle">
                     <h4 className="m-2">{g.nome}</h4>
                     <h6 className="ml-2">Goal segnati: {g.g}</h6>
                     <h6 className="ml-2">Media voti: {g.m}</h6>

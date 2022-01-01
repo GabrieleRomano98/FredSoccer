@@ -4,6 +4,7 @@
 
 .page {
     background-color: #f6f2f2;
+    height: 100%
 }
 
 .tab {
@@ -26,4 +27,22 @@
 
 .nomeSquadra {
     text-align: center;
+}
+
+.cardStyle{
+    color: #97fb57;
+    background-color: #151515;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)
+}
+
+.page {
+  background-color: #f6f2f2;
+  min-height: 100%
+}
+
+.footer{
+    position:absolute;
+    left:0;
+    bottom:0;
+    right:0;
 }

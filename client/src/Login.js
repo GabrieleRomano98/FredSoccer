@@ -12,8 +12,6 @@ function LoginPage(props) {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 
-    const cardStyle = {color: "#97fb57", backgroundColor: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
-
 	const clearAll = () => {
 		setName("");
 		setSurname("");
@@ -28,11 +26,9 @@ function LoginPage(props) {
 		const credentials = { username, password };
 		let valid = true;
 		if (username === "" || password === "") {
-		  //nessun vincolo sulla password
 		  valid = false;
 		  setErrorMessage("Insert email and password to access.");
 		}
-	
 		if (valid) {
 		  clearAll();
 		  props.doLogin(credentials);
@@ -43,26 +39,31 @@ function LoginPage(props) {
 		event.preventDefault();
 		if (name && surname && username && password && confirmPassword) {
 			if (password === confirmPassword) {
-				//Need to call the API to insert into the DB
-				//alert("Inserimento riuscito con successo");
 				const newUser = { email: username, password: password, name: name, surname: surname };
 				API.addUser(newUser)
 				.then(e => props.doLogin({username, password}))
 				.catch(e => setErrorMessage(e.error));
 				clearAll();
 			} else {
-				//password mismatch
 				setErrorMessage("Password Mismatch");
 			}
 		} else {
-			//error in the input of the Data
 			setErrorMessage("Missing Data, check all the fields");
 		}
 	};
 
-  return (
+	const formItems = [
+		...(!props.login ? [{label: "Nome", type: "text", value: name, f: setName},
+		{label: "Cognome", type: "text", value: surname, f: setSurname}] : []),
+		{label: "Email", type: "text", value: username, f: setUsername},
+		{label: "Password", type: "password", value: password, f: setPassword},
+		!props.login && ({label: "Conferma password", type: "password", value: confirmPassword, f: setConfirmPassword})
+	]
+	console.log(formItems);
 
-    props.loggedIn ? <Redirect to="/" /> :
+  	return (
+
+    	props.loggedIn ? <Redirect to="/" /> :
 
     	<Container className='justify-content-center fuild page'>
 
@@ -76,37 +77,17 @@ function LoginPage(props) {
 				<h2 className='mt-1'> {props.login? 'LogIn' : 'SignUp'} </h2>
 			</Row>
 
-			{!props.login && <>
-				<Form.Group controlId='name'>
-					<Form.Label>Nome</Form.Label>
-					<Form.Control style={cardStyle} type='text' value={name} onChange={(ev) => setName(ev.target.value)} required/>
+			{formItems.map(i =>
+				<Form.Group controlId={i.label}>
+					<Form.Label>{i.label}</Form.Label>
+					<Form.Control className="cardStyle" type={i.type} value={i.value} onChange={(ev) => i.f(ev.target.value)} required/>
 				</Form.Group>
-
-				<Form.Group controlId='surname' className='mt-2'>
-					<Form.Label>Cognome</Form.Label>
-					<Form.Control style={cardStyle} type='text' value={surname} onChange={(ev) => setSurname(ev.target.value)} required/>
-				</Form.Group>
-			</>}
-
-			<Form.Group controlId='email' className='mt-2'>
-				<Form.Label>Email</Form.Label>
-				<Form.Control style={cardStyle} type='text' value={username} onChange={(ev) => setUsername(ev.target.value)} required/>
-			</Form.Group>
-
-			<Form.Group controlId='password' className='mt-2'>
-				<Form.Label>Password</Form.Label>
-				<Form.Control style={cardStyle} type='password' value={password} onChange={(ev) => setPassword(ev.target.value)} required/>
-			</Form.Group>
-
-			{!props.login && <Form.Group controlId='confirmPassword' className='mt-2'>
-				<Form.Label>Conferma password</Form.Label>
-				<Form.Control style={cardStyle} type='password' value={confirmPassword} onChange={(ev) => setConfirmPassword(ev.target.value)} required/>
-			</Form.Group>}
+			)}
 
 			{props.login ?
-				<Button style={cardStyle} variant='dark' className='ml-4 mb-2 border' onClick={handleLogin}>LogIn</Button>
+				<Button variant='dark' className='ml-4 mb-2 border cardStyle' onClick={handleLogin}>LogIn</Button>
 			: 
-				<Button style={cardStyle} variant='dark' className='ml-4 mb-2 border' onClick={handleSignup}>SignUp</Button>
+				<Button variant='dark' className='ml-4 mb-2 border cardStyle' onClick={handleSignup}>SignUp</Button>
 			}
 
     	</Container>

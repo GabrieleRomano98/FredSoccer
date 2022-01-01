@@ -8,8 +8,6 @@ const SquadraRow = props => <Row style= {{justifyContent:"space-between"}}>
     <Col style={{paddingLeft: 0, paddingRight: 0}}><div className="m-2">{props.s.g}</div></Col>
 </Row>
 
-const cardStyle = {color: "#97fb57", backgroundColor: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
-
 function Partite(props) {
     const [partite, setPartite] = useState([]);
     useEffect(() => {
@@ -32,7 +30,7 @@ function Partite(props) {
     return(
         <Container fluid>
             {partite.map(p => 
-                    <Link to={'Partita/'+p.id} id={p.id}><Card style={cardStyle} className="mb-4"> <Row>
+                    <Link to={'Partita/'+p.id} id={p.id}><Card className="cardStyle mb-4"> <Row>
                         <Col xs="6">
                             <SquadraRow s={p.s1} />
                             <SquadraRow s={p.s2} />

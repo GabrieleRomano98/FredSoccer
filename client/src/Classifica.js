@@ -3,8 +3,6 @@ import { Card, Spinner, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
-const cardStyle = {color: "#97fb57", backgroundColor: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
-
 function Partita(props) {
     const [classifica, setClassifica] = useState(false);
     useEffect(() => {
@@ -21,7 +19,7 @@ function Partita(props) {
 	}, []);
     return( !classifica ? <Spinner/> : 
         <Container>
-            <Card style={cardStyle} className="mt-4 mb-3">
+            <Card className="cardStyle mt-4 mb-3">
                 <Table responsive className="m-1" striped style={{fontSize: 18, color: "#97fb57"}}>
                     <thead>
                         <tr align="center">

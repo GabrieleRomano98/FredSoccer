@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { Alert } from "react-bootstrap";
+import { Col, Alert, Card, Row, Carousel, Container } from "react-bootstrap";
 import HomePage from "./HomePage";
 import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,6 +14,7 @@ import NavbarTogglerMenu from "./NavbarTogglerMenu"
 import LoginPage from "./Login"
 import Notizie from "./Notizie"
 import Articolo from "./Articolo"
+import AdsFooter from "./AdsFooter";
 
 const App = () => {
 	const [user, setUser] = useState(null);
@@ -49,7 +50,7 @@ const App = () => {
 		setMessage("");
 	};
 
-	return (<>
+	return (<Container>
 		<Router>
 			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
 			<MyTabs/>
@@ -66,7 +67,8 @@ const App = () => {
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 			</Switch>
 		</Router>
-	</>);
+		<AdsFooter />
+	</Container>);
 };
 
 export default App;

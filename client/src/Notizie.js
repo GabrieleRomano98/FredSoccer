@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Card, Container, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const cardStyle = {color: "#97fb57", backgroundColor: "#151515", "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.5)"}
-
 function Notizie(props) {
     const [notizie, setNotizie] = useState(false);
     useEffect(() => {
@@ -23,7 +21,7 @@ function Notizie(props) {
         <Container>
             {notizie.map(n =>
                 <Link to={"/Articolo/"+n.id}>
-                    <Card className="mt-3" style={cardStyle}>
+                    <Card className="mt-3 cardStyle">
                         <h4 className="m-2"><u>{n.t}</u></h4>
                         <t align="right" className="mr-1">{n.data}</t>
                     </Card>
