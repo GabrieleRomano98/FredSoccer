@@ -26,8 +26,8 @@ function Squadra(props) {
             setPartite(p)
             const g = [
                 {id: 0, nome: "Gabri", m: 10.0, p: 120, g: 15},
-                {id: 1, nome: "Fred", m: 5.5, p: 120, g: 0},
-                {id: 2, nome: "Davide", m: 6.0, p: 120, g: 8},
+                {id: 1, nome: "Fred", m: 5.5, p: 120, g: 0, i: "https://cdn.enjore.com/wl/torneicaravaggio_it/img/player/q/2907-P2A7PONr19LfNo4F9trv.jpg"},
+                {id: 2, nome: "Davide", m: 6.0, p: 120, g: 8, i: "https://lh3.googleusercontent.com/mdHKjo8isByb96kj3PBvJybXVte9A5AwhvNP1FCIVrbhGaNqBd1oWWf60Y-nSEBXyt8nLfNff901ZiB4N4Nw=w1960-h3112-rw"},
                 {id: 3, nome: "Guido", m: 7.0, p: 120, g: 7}
             ]; //await API.getGiocatori(props.nome);
             setGiocatori(g);

@@ -132,6 +132,36 @@ app.get("/api/user/:id", (req, res) => {
   }
 });
 
+app.get("/api/ads", (req, res) => {
+  try {
+    mainDao
+      .getAds()
+      .then(Ads => {
+        res.status(200).json(Ads);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Articolo/:id", (req, res) => {
+  try {
+    mainDao
+      .getArticolo(req.params.id)
+      .then(Articolo => {
+        res.status(200).json(Articolo);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
 // POST /api/newUser
 app.post(
   "/api/newUser",

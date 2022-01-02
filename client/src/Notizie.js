@@ -7,11 +7,11 @@ function Notizie(props) {
     useEffect(() => {
 		const getNotizie = async () => {
             const n = [
-                {t: "È morto freddy!", id: 0, data: "05/06/2021"},
-                {t: "Zack è di nuovo infortunato", id: 0, data: "05/06/2021"},
-                {t: "Allerta meteo", id: 0, data: "05/06/2021"},
-                {t: "Allenamento 15:30", id: 0, data: "05/06/2021"},
-                {t: "È lentooo!", id: 0, data: "05/06/2021"}]//await API.getNotizie();
+                {t: "È morto freddy!", id: 1, data: "05/06/2021"},
+                {t: "Zack è di nuovo infortunato", id: 1, data: "05/06/2021"},
+                {t: "Allerta meteo", id: 1, data: "05/06/2021"},
+                {t: "Allenamento 15:30", id: 1, data: "05/06/2021"},
+                {t: "È lentooo!", id: 1, data: "05/06/2021"}]//await API.getNotizie();
                 setNotizie(n);
 		};
 		getNotizie().catch((err) => console.log(err));

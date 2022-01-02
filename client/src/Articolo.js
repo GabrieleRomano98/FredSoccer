@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Container, Spinner, Card } from "react-bootstrap";
+import API from "./API";
 
 function Articolo(props) {
 
     const [articolo, setArticolo] = useState(false);
     useEffect(() => {    
         const getNotizie = async () => {
-            const a = {t: "È morto Fred", date: "05/06/2021",
-                text: "Ci lascia Fred. \n\nBuon amico, pessimo atleta. Chi lo avrebbe mai detto che sarebbe diventato il più veloce dell'atletica virgiliano? Non io, e a quanto pare avevo ragione."}//await API.getArticolo(props.id);
+            const a = await API.getArticolo(props.id);console.log(a)
                 setArticolo(a);
         };
         getNotizie().catch((err) => console.log(err));

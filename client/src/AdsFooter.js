@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { Card, Carousel, Col, Row, Spinner } from "react-bootstrap";
+import  API from "./API";
 
 function AdsFooter(props) {
 
     const [ads, setAds] = useState(false);
     useEffect(() => {
 		const getAds = async () => {
-            const a = [
-                {t: "Questa è la pubblicità dei campi caravaggio", i: "https://www.caravaggiosv.com/wp-content/uploads/elementor/thumbs/calcio-caravaggio-4-oyb3qklv3s0ww1wg4wfswgdbp1hn74nrm2lut5fycs.jpg"},
-                {t: "Questo invece è proprio Freddy", i: "https://cdn.enjore.com/wl/torneicaravaggio_it/img/player/q/2907-P2A7PONr19LfNo4F9trv.jpg"}
-            ]//await API.getAds();
-                setAds(a);
+            const a = await API.getAds();
+                setAds(a);console.log(a)
 		};
 		getAds().catch((err) => console.log(err));
 	}, []);

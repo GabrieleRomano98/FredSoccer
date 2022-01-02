@@ -48,7 +48,8 @@ const Giocatori = props => (
     <div style={{display: "grid", gridTemplateColumns: "140px 140px", columnGap: "10px", justifyContent: "space-around"}}>
         {props.giocatori.map(g => <Link to={'/Giocatore/'+g.id} id={g.id}>
             <Card className="mb-4 cardStyle">
-                <h4 className="m-2">{g.nome}</h4>
+                <img className="mt-2 ml-3" style={{maxHeight: "80px", maxWidth: "80px"}} src={g.i} />
+                <h4 className="ml-2 mb-2">{g.nome}</h4>
                 <h6 className="ml-2">Goal segnati: {g.g}</h6>
                 <h6 className="ml-2">Media voti: {g.m}</h6>
                 <h6 className="ml-2">Presenze: {g.p}</h6>

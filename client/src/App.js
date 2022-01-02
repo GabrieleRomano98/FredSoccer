@@ -58,7 +58,7 @@ const App = () => {
 				<Route exact path='/' render={() => <HomePage user={user} />}/>
 				<Route exact path='/Partite' render={() => <Partite />}/>
 				<Route exact path='/Partita/:id' render={props => <Partita id={props.match.params.id}/>}/>
-				<Route exact path='/Squadra/:nome' render={props => <Squadra nome={props.match.params.nome}/>}/>
+				<Route exact path='/Squadra/:id' render={props => <Squadra nome={props.match.params.id}/>}/>
 				<Route exact path='/Notizie' render={() => <Notizie />}/>
 				<Route exact path='/Classifica' render={() => <Classifica />}/>
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} />}/>

@@ -22,8 +22,24 @@ function getJson(httpResponsePromise) {
   });
 }
 
+async function getAds() {
+	const response = await fetch("/api/ads");
+	const Ads = await response.json();
+	if (response.ok) return Ads.map(a => ({id: a.id, t: a.txt, i: a.img, l: a.link}));
+	else throw Ads;
+}
+
+async function getArticolo(id) {
+	const response = await fetch("/api/Articolo/" + id);
+	const Articolo = await response.json();
+	if (response.ok) return {id: Articolo.id, t: Articolo.Titolo, text: Articolo.Text, date: Articolo.Data, img: Articolo.img};
+	else throw Articolo;
+}
+
 const API = {
-  ...userAPI
+  ...userAPI,
+  getAds,
+  getArticolo
 };
 
 export default API;
