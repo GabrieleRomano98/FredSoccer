@@ -49,7 +49,7 @@ const App = () => {
 		setMessage("");
 	};
 
-	return (<>
+	return (
 		<Router>
 			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
 			<MyTabs/>
@@ -66,7 +66,7 @@ const App = () => {
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 			</Switch>
 		</Router>
-	</>);
+	);
 };
 
 export default App;
