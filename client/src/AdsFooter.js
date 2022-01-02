@@ -17,12 +17,12 @@ function AdsFooter(props) {
 
     return (
         !ads ? <Spinner /> :
-        <Carousel className="m-2" style={{zIndex: 1, overflow: "scroll"}} controls={false} fade={true} indicators={false} interval={3000}>
+        <Carousel className="" controls={false} fade={true} indicators={false} interval={3000}>
             {ads.map(e =>
                 !ads ? <Spinner /> :
                 <Carousel.Item>
                     <Card className="m2 cardStyle"><Row>
-                        <Col align="center"><img className="m-1" style={{height: "80px", bottom: "0px"}} src={e.i} /></Col>
+                        <Col align="center"><img className="m-1" style={{height: "80px"}} src={e.i} /></Col>
                         <Col>{e.t}</Col>	
                     </Row></Card>
                 </Carousel.Item>

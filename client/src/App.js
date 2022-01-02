@@ -14,7 +14,6 @@ import NavbarTogglerMenu from "./NavbarTogglerMenu"
 import LoginPage from "./Login"
 import Notizie from "./Notizie"
 import Articolo from "./Articolo"
-import AdsFooter from "./AdsFooter";
 
 const App = () => {
 	const [user, setUser] = useState(null);
@@ -50,7 +49,7 @@ const App = () => {
 		setMessage("");
 	};
 
-	return (<Container>
+	return (<>
 		<Router>
 			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
 			<MyTabs/>
@@ -67,8 +66,7 @@ const App = () => {
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 			</Switch>
 		</Router>
-		<AdsFooter />
-	</Container>);
+	</>);
 };
 
 export default App;

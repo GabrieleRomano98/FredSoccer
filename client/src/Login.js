@@ -57,7 +57,7 @@ function LoginPage(props) {
 		{label: "Cognome", type: "text", value: surname, f: setSurname}] : []),
 		{label: "Email", type: "text", value: username, f: setUsername},
 		{label: "Password", type: "password", value: password, f: setPassword},
-		!props.login && ({label: "Conferma password", type: "password", value: confirmPassword, f: setConfirmPassword})
+		...(!props.login ? [{label: "Conferma password", type: "password", value: confirmPassword, f: setConfirmPassword}] : [])
 	]
 	console.log(formItems);
 
