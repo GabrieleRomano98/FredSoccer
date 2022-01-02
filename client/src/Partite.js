@@ -2,11 +2,7 @@ import { useState, useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-
-const SquadraRow = props => <Row style= {{justifyContent:"space-between"}}>
-    <Col xs="8" className="ml-3" style={{paddingLeft: 0, paddingRight: 0}}><div className="m-2">{props.s.t}</div></Col>
-    <Col style={{paddingLeft: 0, paddingRight: 0}}><div className="m-2">{props.s.g}</div></Col>
-</Row>
+import { SquadraRow } from "./SquadraElements";
 
 function Partite(props) {
     const [partite, setPartite] = useState([]);
