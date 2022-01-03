@@ -8,7 +8,7 @@ function AdsFooter(props) {
     useEffect(() => {
 		const getAds = async () => {
             const a = await API.getAds();
-                setAds(a);console.log(a)
+                setAds(a);
 		};
 		getAds().catch((err) => console.log(err));
 	}, []);

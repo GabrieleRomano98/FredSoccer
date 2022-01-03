@@ -26,7 +26,6 @@ const App = () => {
 		const checkAuth = async () => {
 			const userTmp = await API.getUserInfo();
 			setLoggedIn(true);
-			console.log(userTmp);
 			setUser(userTmp);
 		};
 		checkAuth().catch((err) => console.log(err));

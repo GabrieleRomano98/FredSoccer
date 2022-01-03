@@ -59,7 +59,6 @@ function LoginPage(props) {
 		{label: "Password", type: "password", value: password, f: setPassword},
 		...(!props.login ? [{label: "Conferma password", type: "password", value: confirmPassword, f: setConfirmPassword}] : [])
 	]
-	console.log(formItems);
 
   	return (
 

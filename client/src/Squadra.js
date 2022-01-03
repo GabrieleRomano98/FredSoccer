@@ -20,7 +20,7 @@ function Squadra(props) {
             setSquadra(s);
             const p = await API.getPartiteSquadra(props.id);
             setPartite(p)
-            const g = await API.getGiocatori(props.id);console.log(g)
+            const g = await API.getGiocatori(props.id);
             setGiocatori(g);
 		};
 		getSquadra().catch((err) => console.log(err));

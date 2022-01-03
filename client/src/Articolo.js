@@ -7,7 +7,7 @@ function Articolo(props) {
     const [articolo, setArticolo] = useState(false);
     useEffect(() => {    
         const getNotizie = async () => {
-            const a = await API.getArticolo(props.id);console.log(a)
+            const a = await API.getArticolo(props.id);
                 setArticolo(a);
         };
         getNotizie().catch((err) => console.log(err));
