@@ -3,22 +3,13 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { SquadraRow } from "./SquadraElements";
+import  API from "./API";
 
 function Partite(props) {
     const [partite, setPartite] = useState([]);
     useEffect(() => {
 		const getPartite = async () => {
-            const p = [{s1: {t: "Napoli", g: 2}, s2: {t: "Juventuuus", g: 10}, date: '05/06/2021', time: '15:30', id: 0},
-            {s1: {t: "Napoli", g: 2}, s2: {t: "Juventus", g: 10}, date: '05/06/2021', time: '15:30', id: 1},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:2},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:3},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:4},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:5},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:6},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:7},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:8},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:9},
-            {s1: {t: "Empoli", g: 2}, s2: {t: "Torino", g: 10}, date: '05/06/2021', time: '15:30', id:10}]//await API.getPartite();
+            const p = await API.getPartite();
             setPartite(p);
 		};
 		getPartite().catch((err) => console.log(err));

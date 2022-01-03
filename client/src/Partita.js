@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Card, Carousel } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
-import { AiFillMobile } from "react-icons/ai"
+import { AiFillMobile } from "react-icons/ai";
+import  API from "./API";
 
 const BaseCard = props => (
     <Card className="cardStyle mt-4 mb-3">
@@ -16,32 +17,20 @@ const BaseCard = props => (
     </Card>
 );
 
+const cardElements = [{t: "Reti", k: "reti"}, {t: "Cartellini", k: "cartellini", i: true},{t: "Pagelle", k: "pagelle", c: true}];
+
 function Partita(props) {
 
     const [partita, setPartita] = useState(false);
     useEffect(() => {
 		const getPartita = async () => {
-            const p = {
-                s1: {
-                    t: "Napoli", g: 4, 
-                    reti:[{k: "Gabri", v: 5}, {k: "Fred", v: 15}], 
-                    cartellini: [{k:"Fred", v: 5, y: true}, {k:"Zack", v: 10, y: true}],
-                    pagelle: [{k: "Gabri", v: 10}, {k: "Stefano", v: 4}, {k: "Enzo", v: 9}, {k: "Zack", v: -3}, {k: "Fred", v: 2}]
-                },
-                s2: {
-                    t: "Juventuuus", g: 0, 
-                    reti: [{k: "Guido", v: 4}, {k: "Stefano", v: 20}, {k: "Davide", v: 57}, {k: "Gianni", v: 6.5}], 
-                    cartellini: [{k:"Guido", v: 30, y: false}],
-                    pagelle: [{k: "Guido", v: 6}, {k: "Davide", v: 6.5}, {k: "Enzo", v: 9}, {k: "Gianni", v: 7}, {k: "Andrea", v: 6}]
-                },
-                date: '05/06/2021', time: '15:30', id: 0}//await AkI.getkartita(kroks.id);
+            const p =  await API.getPartita(props.id);
             setPartita(p);
 		};
 		getPartita().catch((err) => console.log(err));
 	}, []);
 
-    const cardElements = [{t: "Reti", k: "reti"}, {t: "Cartellini", k: "cartellini", i: true},{t: "Pagelle", k: "pagelle", c: true}]
-
+    
     return( !partita ? <></> : 
         <Container>
             <BaseCard

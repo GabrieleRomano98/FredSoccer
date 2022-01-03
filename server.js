@@ -119,8 +119,7 @@ app.get("/api/sessions/current", isLoggedIn, (req, res) => {
 
 app.get("/api/user/:id", (req, res) => {
   try {
-    userDao
-      .getUserById(req.params.id)
+    userDao.getUserById(req.params.id)
       .then((user) => {
         res.status(200).json(user);
       })
@@ -134,8 +133,7 @@ app.get("/api/user/:id", (req, res) => {
 
 app.get("/api/ads", (req, res) => {
   try {
-    mainDao
-      .getAds()
+    mainDao.getAds()
       .then(Ads => {
         res.status(200).json(Ads);
       })
@@ -149,10 +147,113 @@ app.get("/api/ads", (req, res) => {
 
 app.get("/api/Articolo/:id", (req, res) => {
   try {
-    mainDao
-      .getArticolo(req.params.id)
+    mainDao.getArticolo(req.params.id)
       .then(Articolo => {
         res.status(200).json(Articolo);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Notizie", (req, res) => {
+  try {
+    mainDao.getNotizie(req.params.id)
+      .then(Notizie => {
+        res.status(200).json(Notizie);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Classifica", (req, res) => {
+  try {
+    mainDao.getSquadre()
+      .then(Squadre => {
+        res.status(200).json(Squadre);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Squadra/:id", (req, res) => {
+  try {
+    mainDao.getSquadre(req.params.id)
+      .then(Squadra => {
+        res.status(200).json(Squadra);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Squadra/Partite/:id", (req, res) => {
+  try {
+    mainDao.getPartite(false, req.params.id)
+      .then(Partite => {
+        res.status(200).json(Partite);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Partite", (req, res) => {
+  try {
+    mainDao.getPartite()
+      .then(Partite => {
+        res.status(200).json(Partite);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Partita/:id", (req, res) => {
+  try {
+    mainDao.getPartite(req.params.id)
+      .then(Partita => {
+        mainDao.getInfoPartita(req.params.id)
+        .then(Info => {
+          res.status(200).json([Partita, Info]);
+        })
+        .catch((err) => {
+          res.status(503).json({});
+        })
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Giocatori/:id", (req, res) => {
+  try {
+    mainDao.getGiocatori(req.params.id)
+      .then(Giocatori => {
+        res.status(200).json(Giocatori);
       })
       .catch((err) => {
         res.status(503).json({});

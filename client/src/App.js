@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from "react";
 import { Col, Alert, Card, Row, Carousel, Container } from "react-bootstrap";
-import HomePage from "./HomePage";
 import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import API from "./API";
+import HomePage from "./HomePage";
 import MyTabs from "./Tabs";
 import Partite from "./Partite";
 import Partita from "./Partita";
@@ -49,7 +49,7 @@ const App = () => {
 		setMessage("");
 	};
 
-	return (
+	return (<>
 		<Router>
 			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
 			<MyTabs/>
@@ -58,7 +58,7 @@ const App = () => {
 				<Route exact path='/' render={() => <HomePage user={user} />}/>
 				<Route exact path='/Partite' render={() => <Partite />}/>
 				<Route exact path='/Partita/:id' render={props => <Partita id={props.match.params.id}/>}/>
-				<Route exact path='/Squadra/:id' render={props => <Squadra nome={props.match.params.id}/>}/>
+				<Route exact path='/Squadra/:id' render={props => <Squadra id={props.match.params.id}/>}/>
 				<Route exact path='/Notizie' render={() => <Notizie />}/>
 				<Route exact path='/Classifica' render={() => <Classifica />}/>
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} />}/>
@@ -66,7 +66,7 @@ const App = () => {
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 			</Switch>
 		</Router>
-	);
+	</>);
 };
 
 export default App;

@@ -1,6 +1,5 @@
-import { Button, Image, Row, Col} from 'react-bootstrap'
+import { Image } from 'react-bootstrap'
 import AdsFooter from "./AdsFooter";
-import { Link } from 'react-router-dom';
 
 function HomePage(props) {
     return (<>
@@ -8,8 +7,8 @@ function HomePage(props) {
           <h1 className="m-2">Fred Soccer</h1>
           <Image/>
         </div> 
-		      <AdsFooter className="footer"/>  
-        </>)
+        <AdsFooter className="footer"/>
+    </>);
 }
 
 export default HomePage;
