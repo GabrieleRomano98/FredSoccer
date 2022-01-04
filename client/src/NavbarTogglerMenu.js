@@ -13,14 +13,14 @@ function NavbarTogglerMenu(props) {
                     <Navbar.Collapse id="navbar-dark-example">
                         <Nav style={{ marginTop: "10px" }}>
                             {props.logged ?
-                                <NavDropdown.Item onClick={props.doLogOut} style={{color: "#97fb57"}}><Link>Logout</Link></NavDropdown.Item>
+                                <NavDropdown.Item onClick={props.doLogOut} style={{color: "#97fb57"}}>Logout</NavDropdown.Item>
                             :<>
-                                <NavDropdown.Item><Link style={{color: "#97fb57"}} to="Login">Login</Link></NavDropdown.Item>
-                                <NavDropdown.Item><Link style={{color: "#97fb57"}} to="SignUp">SignUp</Link></NavDropdown.Item>
+                                <NavDropdown.Item><Link style={{color: "#97fb57"}} to="/Login">Login</Link></NavDropdown.Item>
+                                {/*<NavDropdown.Item><Link style={{color: "#97fb57"}} to="/SignUp">SignUp</Link></NavDropdown.Item>*/}
                             </>}
-                            {props.logged && <NavDropdown.Item><Link to="AreaRiservata" style={{color: "#97fb57"}}>Area Riservata</Link></NavDropdown.Item>}
+                            {props.logged && <NavDropdown.Item><Link to="/AreaRiservata" style={{color: "#97fb57"}}>Area Riservata</Link></NavDropdown.Item>}
                             <NavDropdown.Divider />
-                            <NavDropdown.Item><Link to="About" style={{color: "#97fb57"}}>About</Link></NavDropdown.Item>
+                            <NavDropdown.Item><Link to="/About" style={{color: "#97fb57"}}>About</Link></NavDropdown.Item>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

@@ -77,17 +77,17 @@ async function getPartite() {
 
 async function getPartita(id) {
 	const response = await fetch("/api/Partita/" + id);
-	const R = await response.json();console.log(R)
+	const R = await response.json();
 	if (response.ok) return {
     id: R[0].id, 
     s1: {
-      t: R[0].s1, g: R[0].g_s1, 
+      id: R[0].id_s1, t: R[0].s1, g: R[0].g_s1,
       reti: R[1].filter(r => !!r.s1 && r.Key === "Rete").map(e => ({k: e.Giocatore, v: e.Minuto})),
       cartellini: R[1].filter(r => !!r.s1 && r.Key === "Cartellino").map(e => ({k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
       pagelle: R[1].filter(r => !!r.s1 && r.Key === "Voto").map(e => ({k: e.Giocatore, v: e.Value})),
     },
     s2:{
-      t: R[0].s2, g: R[0].g_s2, 
+      id: R[0].id_s2, t: R[0].s2, g: R[0].g_s2, 
       reti: R[1].filter(r => !r.s1 && r.Key === "Rete").map(e => ({k: e.Giocatore, v: e.Minuto})),
       cartellini: R[1].filter(r => !r.s1 && r.Key === "Cartellino").map(e => ({k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
       pagelle: R[1].filter(r => !r.s1 && r.Key === "Voto").map(e => ({k: e.Giocatore, v: e.Value})),

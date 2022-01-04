@@ -35,9 +35,9 @@ exports.getSquadre = async (id = false) => {
 
 exports.getPartite = async (idP = false, idS = false) => {
     const [cond, par] = !!idP ? ["WHERE id = ?", [idP]] : !!idS ? ["WHERE id_s1 = ? OR id_s2 = ?", [idS, idS]] : ["", []];
-    const sql = "SELECT id, (SELECT Nome FROM Squadre s WHERE id_s1 = s.id ) AS s1, "
-        + "(SELECT Nome FROM Squadre s WHERE id_s2 = s.id ) AS s2, g_s1, g_s2, Date, Time FROM Partite ";
-    const obj = { id: 0, s1: 0, s2: 0, g_s1: 0, g_s2: 0, Date: "", Time: "" };
+    const sql = "SELECT id, (SELECT Nome FROM Squadre s WHERE id_s1 = s.id ) AS s1, id_s1, "
+        + "(SELECT Nome FROM Squadre s WHERE id_s2 = s.id ) AS s2, id_s2, g_s1, g_s2, Date, Time FROM Partite ";
+    const obj = { id: 0, s1: "", id_s1: 0, s2: "", id_s2: 0, g_s1: 0, g_s2: 0, Date: "", Time: "" };
     return await getQuerySQL(db, sql + cond, par, obj, false, !!idP);
 }
 

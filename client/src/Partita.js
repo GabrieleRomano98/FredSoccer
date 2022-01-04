@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { Card, Carousel } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import { AiFillMobile } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import  API from "./API";
+
+const PartitaRow = props => (<>
+    <Link to={"/Squadra/" + props.id} className="squadra"><u><h5>{props.t}</h5></u></Link><h3>{props.g}</h3>
+</>);
 
 const BaseCard = props => (
     <Card className="cardStyle mt-4 mb-3">
@@ -35,9 +40,9 @@ function Partita(props) {
         <Container>
             <BaseCard
                 title={() => <>{partita.date} {partita.time}</>}
-                left={() => <><h5>{partita.s1.t}</h5><h3>{partita.s1.g}</h3></>}
+                left={() => <PartitaRow id={partita.s1.id} t={partita.s1.t} g={partita.s1.g} />}
                 center = {() => <h1 className="mt-2">-</h1>}
-                right = {() => <><h5>{partita.s2.t}</h5><h3>{partita.s2.g}</h3></>}
+                right = {() => <PartitaRow id={partita.s2.id} t={partita.s2.t} g={partita.s2.g} />}
             />
             <Carousel controls={false}>
                 {cardElements.map(e =>

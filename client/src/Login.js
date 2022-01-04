@@ -79,7 +79,7 @@ function LoginPage(props) {
 			{formItems.map(i =>
 				<Form.Group controlId={i.label}>
 					<Form.Label>{i.label}</Form.Label>
-					<Form.Control className="cardStyle" type={i.type} value={i.value} onChange={(ev) => i.f(ev.target.value)} required/>
+					<Form.Control className="cardStyle" type={i.type} value={i.value} onChange={ev => i.f(ev.target.value)} required/>
 				</Form.Group>
 			)}
 
