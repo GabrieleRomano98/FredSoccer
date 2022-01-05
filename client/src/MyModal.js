@@ -2,21 +2,38 @@ import { useState } from "react";
 import { Button, Modal, Alert, Form } from "react-bootstrap";
 
 function MyModal(props) {
-    const [value, setValue] = useState(Object.fromEntries(props.action.values.map(a => [a.k, ""])));
+    const [value, setValue] = useState(Object.fromEntries(props.action.values.map(a => [a.k, false])));
     const [message, setMessage] = useState('');
+
 	const handleResult = () => {
-        if(!value) {
-            setMessage("Select a result!");
+        if(Object.values(value).some(v => !v)) {
+            setMessage("Riempi tutti i campi!");
             return;
         }
-        console.log(value);//props.PostElement(value)
+        console.log(Object.values(value));
+        props.action.f(value);
         props.hide();
     }
-    const MyForm = props => (
-        props.type === "text" ?
-            <Form.Control value = {value[props.key]} className = "cardStyle" onChange = {e => props.update(e.target.value)}/>
-        : <></>
-    );
+
+    
+    const MyForm = props => {
+        const selectFunction = e => props.update(props.action.options.find(v => v.Nome === e.target.value).id);
+        const startSelect = {Nome: "Scegli squadra", id: false};
+        return (
+            props.action.t === "select" ? 
+                <Form.Control as="select" className="cardStyle" onChange = {selectFunction}>
+                    {[startSelect, ...props.action.options].map(o => <option>{o.Nome}</option>)}
+                </Form.Control>
+            : 
+                <Form.Control
+                    type = {props.action.t}
+                    value = {value[props.action.key]} 
+                    className = "cardStyle" 
+                    onChange = {e => props.update(e.target.value)}
+                />
+        );
+    }
+
     return(
         <Modal show={props.show} onHide={() => props.hide()}>
 
@@ -29,14 +46,14 @@ function MyModal(props) {
                 {props.action.values.map(v => 
                     <Form.Group className = "mb-3 mr-2">
                         <Form.Label>{v.l}</Form.Label>
-                        <MyForm key={v.k} type={v.t} update={e => setValue(val => {var x = val; x[v.k] = e; return x})}/>
+                        <MyForm action = {v} update={e => setValue(val => {var x = val; x[v.k] = e; return x})}/>
                     </Form.Group>
                 )}
 			</Modal.Body>
 
 			<Modal.Footer  style={{backgroundColor: "#f6f2f2"}}>
-				<Button variant="dark" className="cardStyle" onClick={() => props.hide()}>Close</Button>
 				<Button variant="dark" className="cardStyle" onClick={handleResult}>Confirm</Button>
+				<Button variant="danger" className="cardStyle" onClick={() => props.hide()}>Close</Button>
 			</Modal.Footer>
 
 		</Modal>

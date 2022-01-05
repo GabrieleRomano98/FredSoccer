@@ -27,7 +27,7 @@ function Squadra(props) {
 	}, []);
 
     return (
-        !(squadra && partite && giocatori) ? <Spinner/> : 
+        !(squadra && partite && giocatori) ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             <h1 className="ml-2 mb-3 nomeSquadra">{squadra.Nome}</h1>
             <Row style= {{justifyContent:"space-around"}}>{options.map((e, i) => 

@@ -1,4 +1,5 @@
 import userAPI from "./api/user.js";
+import dayjs from "dayjs";
 
 function getJson(httpResponsePromise) {
   return new Promise((resolve, reject) => {
@@ -32,14 +33,14 @@ async function getAds() {
 async function getArticolo(id) {
 	const response = await fetch("/api/Articolo/" + id);
 	const Articolo = await response.json();
-	if (response.ok) return {id: Articolo.id, t: Articolo.Titolo, text: Articolo.Text, date: Articolo.Data, img: Articolo.img};
+	if (response.ok) return {id: Articolo.id, t: Articolo.Titolo, text: Articolo.Text, date: dayjs(Articolo.Data).format("DD/MM/YYYY"), img: Articolo.img};
 	else throw Articolo;
 }
 
 async function getNotizie() {
 	const response = await fetch("/api/Notizie");
 	const Notizie = await response.json();
-	if (response.ok) return Notizie.map(n => ({id: n.id, t: n.Titolo, data: n.Data}));
+	if (response.ok) return Notizie.map(n => ({id: n.id, t: n.Titolo, data: dayjs(n.Data).format("DD/MM/YYYY")}));
 	else throw Notizie;
 }
 
@@ -64,14 +65,14 @@ async function getSquadra(id) {
 async function getPartiteSquadra(id) {
 	const response = await fetch("/api/Squadra/Partite/" + id);
 	const Partite = await response.json();
-	if (response.ok) return Partite.map(p => ({id: p.id, s1: {t: p.s1, g: p.g_s1}, s2:{t: p.s2, g: p.g_s2}, date: p.Date, time: p.Time}));
+	if (response.ok) return Partite.map(p => ({id: p.id, s1: {t: p.s1, g: p.g_s1}, s2:{t: p.s2, g: p.g_s2}, date: dayjs(p.Date).format("DD/MM/YYYY"), time: p.Time}));
 	else throw Partite;
 }
 
 async function getPartite() {
 	const response = await fetch("/api/Partite");
 	const Partite = await response.json();
-	if (response.ok) return Partite.map(p => ({id: p.id, s1: {t: p.s1, g: p.g_s1}, s2:{t: p.s2, g: p.g_s2}, date: p.Date, time: p.Time}));
+	if (response.ok) return Partite.map(p => ({id: p.id, s1: {t: p.s1, g: p.g_s1}, s2:{t: p.s2, g: p.g_s2}, date: dayjs(p.Date).format("DD/MM/YYYY"), time: p.Time}));
 	else throw Partite;
 }
 
@@ -92,7 +93,7 @@ async function getPartita(id) {
       cartellini: R[1].filter(r => !r.s1 && r.Key === "Cartellino").map(e => ({k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
       pagelle: R[1].filter(r => !r.s1 && r.Key === "Voto").map(e => ({k: e.Giocatore, v: e.Value})),
     },
-    date: R[0].Date, time: R[0].Time};
+    date: dayjs(R[0].Date).format("DD/MM/YYYY"), time: R[0].Time};
 	else throw R;
 }
 
@@ -101,6 +102,82 @@ async function getGiocatori(id) {
 	const Giocatori = await response.json();
 	if (response.ok) return Giocatori.map(g => ({id: g.id, nome: g.Nome+" "+g.Cognome, m: g.Media, p: g.Presenze, g: g.Reti, i: g.img}));
 	else throw Giocatori;
+}
+
+async function addPartita(partita) {
+  return new Promise((resolve, reject) => {
+  fetch('/api/Partita', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(partita)
+  }).then((response) => {
+    if (response.ok) {
+      resolve(null);
+    } 
+    else {
+      response.json()
+        .then((message) => { reject(message); }) // error message in the response body
+        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+    }
+  }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+});
+}
+
+async function addSquadra(squadra) {
+  return new Promise((resolve, reject) => {
+  fetch('/api/Squadra', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(squadra)
+  }).then((response) => {
+    if (response.ok) {
+      resolve(null);
+    } 
+    else {
+      response.json()
+        .then((message) => { reject(message); }) // error message in the response body
+        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+    }
+  }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+});
+}
+
+async function addNotizia(Notizia) {
+  return new Promise((resolve, reject) => {
+  fetch('/api/Notizia', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(Notizia)
+  }).then((response) => {
+    if (response.ok) {
+      resolve(null);
+    } 
+    else {
+      response.json()
+        .then((message) => { reject(message); }) // error message in the response body
+        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+    }
+  }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+});
+}
+
+async function addAd(Ad) {
+  return new Promise((resolve, reject) => {
+  fetch('/api/Ad', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(Ad)
+  }).then((response) => {
+    if (response.ok) {
+      resolve(null);
+    } 
+    else {
+      response.json()
+        .then((message) => { reject(message); }) // error message in the response body
+        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+    }
+  }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+});
 }
 
 const API = {
@@ -113,7 +190,11 @@ const API = {
   getPartiteSquadra,
   getGiocatori,
   getPartite,
-  getPartita
+  getPartita,
+  addPartita,
+  addSquadra,
+  addNotizia,
+  addAd
 };
 
 export default API;

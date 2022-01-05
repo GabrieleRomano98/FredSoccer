@@ -14,7 +14,7 @@ function Articolo(props) {
     }, []);
     
     return (
-        !articolo ? <Spinner/> :
+        !articolo ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             <h1 className="ml-2 mb-3 nomeSquadra">{articolo.t}</h1>
             <Card className="mt-3 cardStyle">

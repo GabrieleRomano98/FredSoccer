@@ -64,7 +64,7 @@ const App = () => {
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} />}/>
 				<Route exact path='/Login' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin} login={true}/>}/>
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
-				<Route exact path='/AreaRiservata' render={() => loggedIn ? <Redirect to="/" /> : <AreaRiservata />}/>
+				<Route exact path='/AreaRiservata' render={() => !loggedIn ? <Redirect to="/" /> : <AreaRiservata />}/>
 			</Switch>
 		</Router>
 	</>);

@@ -13,7 +13,7 @@ function Partita(props) {
 		};
 		getClassifica().catch((err) => console.log(err));
 	}, []);
-    return( !classifica ? <Spinner/> : 
+    return( !classifica ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             <Card className="cardStyle mt-4 mb-3">
                 <Table responsive className="m-1" striped style={{fontSize: 18, color: "#97fb57"}}>

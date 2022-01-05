@@ -263,6 +263,48 @@ app.get("/api/Giocatori/:id", (req, res) => {
   }
 });
 
+app.post("/api/Partita", isLoggedIn, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      await mainDao.addPartita(1, req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.post("/api/Squadra", isLoggedIn, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      await mainDao.addSquadra(req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.post("/api/Ad", isLoggedIn, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      await mainDao.addAd(req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
 // POST /api/newUser
 app.post(
   "/api/newUser",

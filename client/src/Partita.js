@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, Carousel } from "react-bootstrap";
+import { Card, Carousel, Spinner } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import { AiFillMobile } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -22,7 +22,11 @@ const BaseCard = props => (
     </Card>
 );
 
-const cardElements = [{t: "Reti", k: "reti"}, {t: "Cartellini", k: "cartellini", i: true},{t: "Pagelle", k: "pagelle", c: true}];
+const cardElements = [
+    {t: "Reti", k: "reti", m: true},
+    {t: "Cartellini", k: "cartellini", m: true, i: true},
+    {t: "Pagelle", k: "pagelle", c: true}
+];
 
 function Partita(props) {
 
@@ -30,28 +34,28 @@ function Partita(props) {
     useEffect(() => {
 		const getPartita = async () => {
             const p =  await API.getPartita(props.id);
-            setPartita(p);
+            setPartita(p);console.log(p);
 		};
 		getPartita().catch((err) => console.log(err));
 	}, []);
 
     
-    return( !partita ? <></> : 
+    return( !partita ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             <BaseCard
-                title={() => <>{partita.date} {partita.time}</>}
+                title={() => <h6>{partita.date} {partita.time}</h6>}
                 left={() => <PartitaRow id={partita.s1.id} t={partita.s1.t} g={partita.s1.g} />}
                 center = {() => <h1 className="mt-2">-</h1>}
                 right = {() => <PartitaRow id={partita.s2.id} t={partita.s2.t} g={partita.s2.g} />}
             />
             <Carousel controls={false}>
-                {cardElements.map(e =>
+                {partita.s1.g !== null && cardElements.map(e =>
                     <Carousel.Item>
                         <BaseCard
                             title = {() => <h5>{e.t}</h5>}
-                            left = {() => <>{partita.s1[e.k].map(r => <h6>{r.k}{e.c && ":"} {r.v}' {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
+                            left = {() => <>{partita.s1[e.k].map(r => <h6>{r.k}{e.c && ":"} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
                             center = {() => <div style={{height: '100%', width: 1, backgroundColor: '#97fb57'}}></div>}
-                            right = {() => <>{partita.s2[e.k].map(r => <h6>{r.k} {r.v}' {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
+                            right = {() => <>{partita.s2[e.k].map(r => <h6>{r.k} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
                         />
                     </Carousel.Item>
                 )}

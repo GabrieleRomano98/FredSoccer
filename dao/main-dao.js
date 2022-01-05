@@ -1,6 +1,6 @@
 "use strict";
 
-const { getQuerySQL } = require("./utility");
+const { getQuerySQL, runQuerySQL } = require("./utility");
 const db = require("../db");
 
 exports.getAds = async () => {
@@ -38,7 +38,7 @@ exports.getPartite = async (idP = false, idS = false) => {
     const sql = "SELECT id, (SELECT Nome FROM Squadre s WHERE id_s1 = s.id ) AS s1, id_s1, "
         + "(SELECT Nome FROM Squadre s WHERE id_s2 = s.id ) AS s2, id_s2, g_s1, g_s2, Date, Time FROM Partite ";
     const obj = { id: 0, s1: "", id_s1: 0, s2: "", id_s2: 0, g_s1: 0, g_s2: 0, Date: "", Time: "" };
-    return await getQuerySQL(db, sql + cond, par, obj, false, !!idP);
+    return await getQuerySQL(db, sql + cond + "ORDER BY Date", par, obj, false, !!idP);
 }
 
 exports.getInfoPartita = async id => {
@@ -57,4 +57,28 @@ exports.getGiocatori = async id => {
         + "FROM Giocatori WHERE Squadra = ? ";
     const obj = { id: 0, Nome: "", Cognome: "", img: "", Reti: 0, Presenze: 0, Media: 0 };
     return await getQuerySQL(db, sql, [id], obj, false, false);
+}
+
+exports.addPartita = async (Tournament, Partita) => {
+    const sql = "INSERT INTO Partite(id_tournament, id_s1, id_s2, Date, Time) VALUES(?, ?, ?, ?, ?)";
+    const par = [Tournament, ...Object.values(Partita)];
+    return await runQuerySQL(db, sql, par, false);
+}
+
+exports.addSquadra = async Squadra => {
+    const sql = "INSERT INTO Squadre(Nome, img) VALUES(?, ?)";
+    const par = Object.values(Squadra);
+    return await runQuerySQL(db, sql, par, false);
+}
+
+exports.addNotizia = async Notizia => {
+    const sql = "INSERT INTO Articoli(Titolo, Data, Text, img) VALUES(?, ?, ?, ?)";
+    const par = Object.values(Notizia);
+    return await runQuerySQL(db, sql, par, false);
+}
+
+exports.addAd = async Ad => {
+    const sql = "INSERT INTO Ads(txt, img, link) VALUES(?, ?, ?)";
+    const par = Object.values(Ad);
+    return await runQuerySQL(db, sql, par, false);
 }

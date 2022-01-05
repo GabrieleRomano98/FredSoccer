@@ -13,7 +13,7 @@ function Notizie(props) {
 		getNotizie().catch((err) => console.log(err));
 	}, []);
     return(
-        !notizie ? <Spinner/> :
+        !notizie ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             {notizie.map(n =>
                 <Link key={n.id} to={"/Articolo/"+n.id}>
