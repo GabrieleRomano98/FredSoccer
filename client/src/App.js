@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import { Col, Alert, Card, Row, Carousel, Container } from "react-bootstrap";
-import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { Alert } from "react-bootstrap";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import API from "./API";
@@ -29,7 +29,12 @@ const App = () => {
 			setLoggedIn(true);
 			setUser(userTmp);
 		};
+		const getTorneo = async () => {
+			const t = await API.getTorneo();console.log(t);
+			setTorneo(t);
+		}
 		checkAuth().catch((err) => console.log(err));
+		getTorneo().catch((err) => console.log(err));
 	}, []);
 
 	const doLogin = async (credentials) => {
@@ -51,17 +56,17 @@ const App = () => {
 
 	return (<>
 		<Router>
-			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
+			<NavbarTogglerMenu torneo={torneo} logged={loggedIn} doLogOut={doLogOut} />
 			{!!torneo && <MyTabs/>}
 			{message && <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>}
 			<Switch>
 				<Route exact path='/' render={() => <HomePage torneo={torneo} setTorneo={setTorneo} />}/>
-				<Route exact path='/Partite' render={() => <Partite />}/>
-				<Route exact path='/Partita/:id' render={props => <Partita id={props.match.params.id}/>}/>
-				<Route exact path='/Squadra/:id' render={props => <Squadra id={props.match.params.id}/>}/>
 				<Route exact path='/Notizie' render={() => <Notizie />}/>
-				<Route exact path='/Classifica' render={() => <Classifica />}/>
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} />}/>
+				<Route exact path='/Partite' render={() => !torneo ? <Redirect to = "/" /> : <Partite />}/>
+				<Route exact path='/Partita/:id' render={props => !torneo ? <Redirect to = "/" /> : <Partita id={props.match.params.id}/>}/>
+				<Route exact path='/Squadra/:id' render={props => !torneo ? <Redirect to = "/" /> : <Squadra id={props.match.params.id}/>}/>
+				<Route exact path='/Classifica' render={() => !torneo ? <Redirect to = "/" /> : <Classifica />}/>
 				<Route exact path='/Login' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin} login={true}/>}/>
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 				<Route exact path='/AreaRiservata' render={() => !loggedIn ? <Redirect to="/" /> : <AreaRiservata />}/>

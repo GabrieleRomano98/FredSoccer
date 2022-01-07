@@ -2,13 +2,10 @@
 
 ## Torneo
 
-* Aggiungi Torneo (area riservata)
-* Modifica Torneo
+* Crea Torneo
+* Rinomina Torneo
 * Elimina torneo ("Anche le partite disputate nel torneo saranno eliminate (ma non le squadre partecipanti e i giocatori)")
-* useEffect getTorneo
-* API getTorneo
-* API setTorneo
-* setTornero dalla navbar
+* Gestisci iscrizioni
 
 ## Partita
 

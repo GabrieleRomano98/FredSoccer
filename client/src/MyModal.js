@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Card, Button, Modal, Alert, Form } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Card, Button, Modal, Alert, Form, Spinner } from "react-bootstrap";
 
 function MyModal(props) {
     const [value, setValue] = useState(Object.fromEntries(props.action.values.map(a => [a.k, false])));
@@ -62,6 +62,14 @@ function MyModal(props) {
 
 function ListModal(props) {
     const [message, setMessage] = useState('');
+    const [values, setValues] = useState(false);
+    useEffect(() => {
+		const getValues = async () => {
+            const v =  await props.getValues();console.log(v)
+            setValues(v);
+		};
+		getValues().catch((err) => console.log(err));
+	}, []);
 
     return(
         <Modal show={props.show} onHide={() => props.hide()}>
@@ -72,7 +80,7 @@ function ListModal(props) {
 
 			<Modal.Body style={{backgroundColor: "#f6f2f2"}}>
                 {message && <Alert variant="danger" onClose={() => setMessage('')} dismissible>{message}</Alert>}
-                {props.values.map(v => 
+                {!values ? <div align="center"><Spinner animation="border" /></div> : values.map(v => 
                     <Form.Group className = "mb-3 mr-2">
                         <Card className = "cardStyle">
                             <span onClick = {() => {props.select(v.id); props.hide();}}><h2 className = "ml-3">{v.key}</h2></span>

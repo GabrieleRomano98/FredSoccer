@@ -3,6 +3,14 @@
 const { getQuerySQL, runQuerySQL } = require("./utility");
 const db = require("../db");
 
+exports.getTorneo = async id => {
+    return await getQuerySQL(db, "SELECT Nome FROM Tornei WHERE id = ?", [id], {Nome: ""}, false, true);
+}
+
+exports.getTornei = async () => {
+    return await getQuerySQL(db, "SELECT * FROM Tornei", [], {id: 0, Nome: ""}, false, false);
+}
+
 exports.getAds = async () => {
     return await getQuerySQL(db, "SELECT * FROM Ads", [], {id: 0, txt: "", img: "", link: ""}, false, false);
 }
@@ -15,20 +23,22 @@ exports.getNotizie = async () => {
     return await getQuerySQL(db, "SELECT id, Titolo, Data FROM Articoli ORDER BY Data", [], {id: 0, Titolo: "", Data: ""}, false, false);
 }
 
-exports.getSquadre = async (id = false) => {
-    const [cond, par] = !!id ? ["WHERE id = ?", [id]] : ["", []];
+exports.getSquadre = async (t, id = false) => {
+    let [cond, par] = !!id ? [" AND id = ?", [id]] : ["", []];
+    const base = "(SELECT COUNT(*) FROM Partite p WHERE id_tournament = ? AND ";
     const sql = "SELECT s.id, s.Nome, " + (!!id ? "s.img, " : "")
-        + "3*(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1) +"
-        + "(SELECT COUNT(*) FROM PARTITE p WHERE (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS PT,"
-        + "(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id OR p.id_s2 = s.id) AS PG,"
-        + "(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1) AS V,"
-        + "(SELECT COUNT(*) FROM PARTITE p WHERE (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS P,"
-        + "(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id AND p.g_s1 < p.g_s2 OR p.id_s2 = s.id AND p.g_s2 < p.g_s1) AS S,"
-        + "(SELECT IFNULL(SUM(p.g_s1), 0) FROM Partite p WHERE p.id_s1 = s.id) +"
-        + "(SELECT IFNULL(SUM(p.g_s2), 0) FROM Partite p WHERE p.id_s2 = s.id) AS GF,"
-        + "(SELECT IFNULL(SUM(p.g_s1), 0) FROM Partite p WHERE p.id_s2 = s.id) + "
-        + "(SELECT IFNULL(SUM(p.g_s2), 0) FROM Partite p WHERE p.id_s1 = s.id) AS GS "
-        + "FROM Squadre s ";
+        + "3*" + base + "(p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) +"
+        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS PT,"
+        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id)) AS PG,"
+        + base + " (p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) AS V,"
+        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS P,"
+        + base + " (p.id_s1 = s.id AND p.g_s1 < p.g_s2 OR p.id_s2 = s.id AND p.g_s2 < p.g_s1)) AS S,"
+        + "(SELECT IFNULL(SUM(p.g_s1), 0) FROM Partite p WHERE id_tournament = ? AND p.id_s1 = s.id) +"
+        + "(SELECT IFNULL(SUM(p.g_s2), 0) FROM Partite p WHERE id_tournament = ? AND p.id_s2 = s.id) AS GF,"
+        + "(SELECT IFNULL(SUM(p.g_s1), 0) FROM Partite p WHERE id_tournament = ? AND p.id_s2 = s.id) + "
+        + "(SELECT IFNULL(SUM(p.g_s2), 0) FROM Partite p WHERE id_tournament = ? AND p.id_s1 = s.id) AS GS "
+        + "FROM Squadre s WHERE s.id IN (SELECT Squadra FROM Iscrizioni WHERE Torneo = ?)";
+    par = [t, t, t, t, t, t, t, t, t, t, t, ...par];
     const obj = { id: 0, Nome: "", img: "", PT: 0, PG: 0, V: 0, P: 0, S: 0, GF: 0, GS: 0 };
     return await getQuerySQL(db, sql + cond, par, obj, false, !!id);
 }

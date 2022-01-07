@@ -26,21 +26,21 @@ function getJson(httpResponsePromise) {
 async function getTornei() {
 	const response = await fetch("/api/Tornei");
 	const Tornei = await response.json();
-	if (response.ok) return Tornei;
+	if (response.ok) return Tornei.map(t => ({id: t.id, key: t.Nome}));
 	else throw Tornei;
 }
 
-async function getTorneo(id = "") {
-	const response = await fetch("/api/Torneo" + id);
+async function getTorneo(Nome = false) {
+	const response = await fetch("/api/Torneo" + (Nome ? "/Nome" : ""));
 	const Torneo = await response.json();
-	if (response.ok) return Torneo;
+	if (response.ok) return Torneo[Nome ? "Nome" : "id"];
 	else throw Torneo;
 }
 
 async function setTorneo(id) {
   return new Promise((resolve, reject) => {
-  fetch('/api/Toreno/' + id, {
-      method: 'POST',
+  fetch('/api/Torneo/' + id, {
+      method: 'PUT',
       headers: {'Content-Type': 'application/json'}
   }).then((response) => {
     if (response.ok) {

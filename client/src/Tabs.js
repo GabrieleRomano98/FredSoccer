@@ -1,6 +1,6 @@
 import {Tabs, Tab} from 'react-bootstrap'
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function MyTabs(props) {
     const history = useHistory();

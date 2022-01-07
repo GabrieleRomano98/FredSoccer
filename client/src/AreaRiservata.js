@@ -34,6 +34,9 @@ function AreaRiservata() {
                     {l: "Link immagine", t: "text", k: "img"},
                     {l: "Link sito", t: "text", k: "link"},
                 ]},
+                {n: "Crea Torneo", f: API.addTorneo, values: [
+                    {l: "Nome", t: "text", k: "txt"},
+                ]},
             ];
             setActions(a);
 		};

@@ -131,6 +131,44 @@ app.get("/api/user/:id", (req, res) => {
   }
 });
 
+app.get("/api/Torneo", (req, res) => {
+  const r = !req.session.Torneo ? false : req.session.Torneo;
+    return res.status(200).json({id: r});
+});
+
+app.get("/api/Torneo/Nome", (req, res) => {
+  try {
+    mainDao.getTorneo(req.session.Torneo)
+      .then(Torneo => {
+        res.status(200).json(Torneo);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Tornei", (req, res) => {
+  try {
+    mainDao.getTornei()
+      .then(Tornei => {
+        res.status(200).json(Tornei);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.put("/api/thisTorneo/:id", async (req, res) => {
+  req.session.Torneo = req.params.id;
+  res.status(201).end();
+});
+
 app.get("/api/ads", (req, res) => {
   try {
     mainDao.getAds()
@@ -175,7 +213,7 @@ app.get("/api/Notizie", (req, res) => {
 
 app.get("/api/Classifica", (req, res) => {
   try {
-    mainDao.getSquadre()
+    mainDao.getSquadre(req.session.Torneo)
       .then(Squadre => {
         res.status(200).json(Squadre);
       })
@@ -189,7 +227,7 @@ app.get("/api/Classifica", (req, res) => {
 
 app.get("/api/Squadra/:id", (req, res) => {
   try {
-    mainDao.getSquadre(req.params.id)
+    mainDao.getSquadre(req.session.Torneo, req.params.id)
       .then(Squadra => {
         res.status(200).json(Squadra);
       })
@@ -203,7 +241,9 @@ app.get("/api/Squadra/:id", (req, res) => {
 
 app.get("/api/Squadra/Partite/:id", (req, res) => {
   try {
-    mainDao.getPartite(1, false, req.params.id)
+    if(!req.session.Torneo)
+      res.status(500).json(false);
+    mainDao.getPartite(req.session.Torneo, false, req.params.id)
       .then(Partite => {
         res.status(200).json(Partite);
       })
@@ -217,7 +257,9 @@ app.get("/api/Squadra/Partite/:id", (req, res) => {
 
 app.get("/api/Partite", (req, res) => {
   try {
-    mainDao.getPartite(1)
+    if(!req.session.Torneo)
+      return res.status(500).json(false);
+    mainDao.getPartite(req.session.Torneo)
       .then(Partite => {
         res.status(200).json(Partite);
       })
@@ -231,7 +273,9 @@ app.get("/api/Partite", (req, res) => {
 
 app.get("/api/Partita/:id", (req, res) => {
   try {
-    mainDao.getPartite(1, req.params.id)
+    if(!req.session.Torneo)
+      res.status(500).json(false);
+    mainDao.getPartite(req.session.Torneo, req.params.id)
       .then(Partita => {
         mainDao.getInfoPartita(req.params.id)
         .then(Info => {
@@ -269,6 +313,8 @@ app.post("/api/Partita", isLoggedIn, async (req, res) => {
       return res.status(422).json({ errors: errors.array() });
     }
     try {
+      if(!req.session.Torneo)
+        return res.status(500).json({error: "Seleziona un torneo nella home page"});
       await mainDao.addPartita(1, req.body);
       res.status(201).end();
     } catch (err) {
