@@ -15,7 +15,7 @@ function AdsFooter(props) {
 
     return (
         !ads ? <div align="center"><Spinner animation="border" /></div> :
-        <Carousel className="" controls={false} fade={true} indicators={false}>
+        <Carousel className="m-2" controls={false} fade={true} indicators={false}>
             {ads.map(e =>
                 <Carousel.Item>
                     <Card className="m2 cardStyle"><Row>

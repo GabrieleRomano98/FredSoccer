@@ -203,7 +203,7 @@ app.get("/api/Squadra/:id", (req, res) => {
 
 app.get("/api/Squadra/Partite/:id", (req, res) => {
   try {
-    mainDao.getPartite(false, req.params.id)
+    mainDao.getPartite(1, false, req.params.id)
       .then(Partite => {
         res.status(200).json(Partite);
       })
@@ -217,7 +217,7 @@ app.get("/api/Squadra/Partite/:id", (req, res) => {
 
 app.get("/api/Partite", (req, res) => {
   try {
-    mainDao.getPartite()
+    mainDao.getPartite(1)
       .then(Partite => {
         res.status(200).json(Partite);
       })
@@ -231,7 +231,7 @@ app.get("/api/Partite", (req, res) => {
 
 app.get("/api/Partita/:id", (req, res) => {
   try {
-    mainDao.getPartite(req.params.id)
+    mainDao.getPartite(1, req.params.id)
       .then(Partita => {
         mainDao.getInfoPartita(req.params.id)
         .then(Info => {

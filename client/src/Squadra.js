@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Spinner, Button } from "react-bootstrap";
+import { Card, Image, Spinner, Button } from "react-bootstrap";
 import { Container, Row } from "react-bootstrap";
 import { Statistiche, Partite, Giocatori } from "./SquadraElements";
 import  API from "./API";
@@ -16,7 +16,7 @@ function Squadra(props) {
     const options = ["Statistiche", "Partite", "Giocatori"];
     useEffect(() => {
 		const getSquadra = async () => {
-            const s =  await API.getSquadra(props.id);
+            const s =  await API.getSquadra(props.id);console.log(s);
             setSquadra(s);
             const p = await API.getPartiteSquadra(props.id);
             setPartite(p)
@@ -30,8 +30,11 @@ function Squadra(props) {
         !(squadra && partite && giocatori) ? <div align="center"><Spinner animation="border" /></div> :
         <Container>
             <h1 className="ml-2 mb-3 nomeSquadra">{squadra.Nome}</h1>
+            <Card className = "cardStyle mt-3 mb-4 m-2">
+				<Image className = "m-3" src = {squadra.img} />
+			</Card>
             <Row style= {{justifyContent:"space-around"}}>{options.map((e, i) => 
-                <Button className="m-2 mb-4" variant="dark" style={selected !== i ? b1Style : b2Style} onClick={() => setSelected(i)}>
+                <Button className="m-2 mb-3" variant="dark" style={selected !== i ? b1Style : b2Style} onClick={() => setSelected(i)}>
                     {e}
                 </Button>
             )}</Row>

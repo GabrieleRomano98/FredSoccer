@@ -20,7 +20,7 @@ const App = () => {
 	const [user, setUser] = useState(null);
 	const [message, setMessage] = useState('');
 	const [loggedIn, setLoggedIn] = useState(false);
-	const [login, setLogin] = useState(false);
+	const [torneo, setTorneo] = useState(false);
 
 	useEffect(() => {
 		//per non perdere utente loggato se aggiorno pagina, da qui viene l'errore della GET 401(unhautorized)
@@ -52,10 +52,10 @@ const App = () => {
 	return (<>
 		<Router>
 			<NavbarTogglerMenu logged={loggedIn} doLogOut={doLogOut} />
-			<MyTabs/>
+			{!!torneo && <MyTabs/>}
 			{message && <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>}
 			<Switch>
-				<Route exact path='/' render={() => <HomePage user={user} />}/>
+				<Route exact path='/' render={() => <HomePage torneo={torneo} setTorneo={setTorneo} />}/>
 				<Route exact path='/Partite' render={() => <Partite />}/>
 				<Route exact path='/Partita/:id' render={props => <Partita id={props.match.params.id}/>}/>
 				<Route exact path='/Squadra/:id' render={props => <Squadra id={props.match.params.id}/>}/>

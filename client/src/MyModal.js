@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal, Alert, Form } from "react-bootstrap";
+import { Card, Button, Modal, Alert, Form } from "react-bootstrap";
 
 function MyModal(props) {
     const [value, setValue] = useState(Object.fromEntries(props.action.values.map(a => [a.k, false])));
@@ -52,12 +52,40 @@ function MyModal(props) {
 			</Modal.Body>
 
 			<Modal.Footer  style={{backgroundColor: "#f6f2f2"}}>
-				<Button variant="dark" className="cardStyle" onClick={handleResult}>Confirm</Button>
-				<Button variant="danger" className="cardStyle" onClick={() => props.hide()}>Close</Button>
+				<Button variant="dark" className="cardStyle" onClick={handleResult}>Conferma</Button>
+				<Button variant="danger" className="cardStyle" onClick={() => props.hide()}>Chiudi</Button>
 			</Modal.Footer>
 
 		</Modal>
     );
 }
 
-export default MyModal;
+function ListModal(props) {
+    const [message, setMessage] = useState('');
+
+    return(
+        <Modal show={props.show} onHide={() => props.hide()}>
+
+            <Modal.Header closeButton style={{backgroundColor: "#f6f2f2"}}>
+				<Modal.Title>{props.title}</Modal.Title>
+			</Modal.Header>
+
+			<Modal.Body style={{backgroundColor: "#f6f2f2"}}>
+                {message && <Alert variant="danger" onClose={() => setMessage('')} dismissible>{message}</Alert>}
+                {props.values.map(v => 
+                    <Form.Group className = "mb-3 mr-2">
+                        <Card className = "cardStyle">
+                            <span onClick = {() => {props.select(v.id); props.hide();}}><h2 className = "ml-3">{v.key}</h2></span>
+                        </Card>
+                    </Form.Group>
+                )}
+			</Modal.Body>
+
+			<Modal.Footer  style={{backgroundColor: "#f6f2f2"}}>
+				<Button variant="danger" className="cardStyle" onClick={() => props.hide()}>Chiudi</Button>
+			</Modal.Footer>
+
+		</Modal>
+    );
+}
+export {MyModal, ListModal};

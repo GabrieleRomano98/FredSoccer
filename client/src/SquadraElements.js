@@ -13,7 +13,7 @@ const Statistiche = props => (
     <Card className="cardStyle">
         <h3 className="ml-4 mb-3">Statistiche</h3>
         <Row>
-            <Col className="ml-5 mb-5">
+            <Col className="ml-5">
                 <h5 >Punti: {props.squadra.PT}</h5>
                 <h5>Partite: {props.squadra.PG}</h5>
                 <h5>Goal fatti: {props.squadra.GF}</h5>

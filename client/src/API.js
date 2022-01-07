@@ -23,6 +23,38 @@ function getJson(httpResponsePromise) {
   });
 }
 
+async function getTornei() {
+	const response = await fetch("/api/Tornei");
+	const Tornei = await response.json();
+	if (response.ok) return Tornei;
+	else throw Tornei;
+}
+
+async function getTorneo(id = "") {
+	const response = await fetch("/api/Torneo" + id);
+	const Torneo = await response.json();
+	if (response.ok) return Torneo;
+	else throw Torneo;
+}
+
+async function setTorneo(id) {
+  return new Promise((resolve, reject) => {
+  fetch('/api/Toreno/' + id, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'}
+  }).then((response) => {
+    if (response.ok) {
+      resolve(null);
+    } 
+    else {
+      response.json()
+        .then(message => { reject(message); }) // error message in the response body
+        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+    }
+  }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+});
+}
+
 async function getAds() {
 	const response = await fetch("/api/ads");
 	const Ads = await response.json();
@@ -83,9 +115,9 @@ async function getPartita(id) {
     id: R[0].id, 
     s1: {
       id: R[0].id_s1, t: R[0].s1, g: R[0].g_s1,
-      reti: R[1].filter(r => !!r.s1 && r.Key === "Rete").map(e => ({k: e.Giocatore, v: e.Minuto})),
-      cartellini: R[1].filter(r => !!r.s1 && r.Key === "Cartellino").map(e => ({k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
-      pagelle: R[1].filter(r => !!r.s1 && r.Key === "Voto").map(e => ({k: e.Giocatore, v: e.Value})),
+      reti: R[1].filter(r => !!r.s1 && r.Key === "Rete").map(e => ({id: e.id, k: e.Giocatore, v: e.Minuto})),
+      cartellini: R[1].filter(r => !!r.s1 && r.Key === "Cartellino").map(e => ({id: e.id, k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
+      pagelle: R[1].filter(r => !!r.s1 && r.Key === "Voto").map(e => ({id: e.id, k: e.Giocatore, v: e.Value})),
     },
     s2:{
       id: R[0].id_s2, t: R[0].s2, g: R[0].g_s2, 
@@ -182,6 +214,9 @@ async function addAd(Ad) {
 
 const API = {
   ...userAPI,
+  getTorneo,
+  getTornei,
+  setTorneo,
   getAds,
   getArticolo,
   getNotizie,

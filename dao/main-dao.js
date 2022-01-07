@@ -12,12 +12,12 @@ exports.getArticolo = async id => {
 }
 
 exports.getNotizie = async () => {
-    return await getQuerySQL(db, "SELECT id, Titolo, Data FROM Articoli", [], {id: 0, Titolo: "", Data: ""}, false, false);
+    return await getQuerySQL(db, "SELECT id, Titolo, Data FROM Articoli ORDER BY Data", [], {id: 0, Titolo: "", Data: ""}, false, false);
 }
 
 exports.getSquadre = async (id = false) => {
     const [cond, par] = !!id ? ["WHERE id = ?", [id]] : ["", []];
-    const sql = "SELECT s.id, s.Nome,"
+    const sql = "SELECT s.id, s.Nome, " + (!!id ? "s.img, " : "")
         + "3*(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1) +"
         + "(SELECT COUNT(*) FROM PARTITE p WHERE (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS PT,"
         + "(SELECT COUNT(*) FROM Partite p WHERE p.id_s1 = s.id OR p.id_s2 = s.id) AS PG,"
@@ -29,23 +29,25 @@ exports.getSquadre = async (id = false) => {
         + "(SELECT IFNULL(SUM(p.g_s1), 0) FROM Partite p WHERE p.id_s2 = s.id) + "
         + "(SELECT IFNULL(SUM(p.g_s2), 0) FROM Partite p WHERE p.id_s1 = s.id) AS GS "
         + "FROM Squadre s ";
-    const obj = { id: 0, Nome: "", PT: 0, PG: 0, V: 0, P: 0, S: 0, GF: 0, GS: 0 };
+    const obj = { id: 0, Nome: "", img: "", PT: 0, PG: 0, V: 0, P: 0, S: 0, GF: 0, GS: 0 };
     return await getQuerySQL(db, sql + cond, par, obj, false, !!id);
 }
 
-exports.getPartite = async (idP = false, idS = false) => {
-    const [cond, par] = !!idP ? ["WHERE id = ?", [idP]] : !!idS ? ["WHERE id_s1 = ? OR id_s2 = ?", [idS, idS]] : ["", []];
+exports.getPartite = async (tournament = 1, idP = false, idS = false) => {
+    const [cond, par] = !!idP ? ["WHERE id = ?", [idP]] 
+        : !!idS ? ["WHERE id_tournament = ? AND id_s1 = ? OR id_s2 = ?", [tournament, idS, idS]] 
+        : ["WHERE id_tournament = ?", [tournament]];
     const sql = "SELECT id, (SELECT Nome FROM Squadre s WHERE id_s1 = s.id ) AS s1, id_s1, "
         + "(SELECT Nome FROM Squadre s WHERE id_s2 = s.id ) AS s2, id_s2, g_s1, g_s2, Date, Time FROM Partite ";
     const obj = { id: 0, s1: "", id_s1: 0, s2: "", id_s2: 0, g_s1: 0, g_s2: 0, Date: "", Time: "" };
-    return await getQuerySQL(db, sql + cond + "ORDER BY Date", par, obj, false, !!idP);
+    return await getQuerySQL(db, sql + cond + " ORDER BY Date", par, obj, false, !!idP);
 }
 
 exports.getInfoPartita = async id => {
-    const sql = "SELECT (SELECT Cognome FROM Giocatori WHERE id = id_giocatore) AS Giocatore, Key, Minuto, Value, "
+    const sql = "SELECT id, (SELECT Cognome FROM Giocatori WHERE id = id_giocatore) AS Giocatore, Key, Minuto, Value, "
         + "(SELECT id_s1 FROM Partite WHERE id = ?) = (SELECT Squadra FROM Giocatori WHERE id = id_giocatore) AS s1 "
         + "FROM Partita_meta WHERE id_partita = ? ";
-    const obj = { Giocatore: "", Key: "", Minuto: 0, Value: 0, s1: 0 };
+    const obj = { id: 0, Giocatore: "", Key: "", Minuto: 0, Value: 0, s1: 0 };
     return await getQuerySQL(db, sql, [id, id], obj, false, false);
 }
 

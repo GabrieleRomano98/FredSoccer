@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Container, Row, Spinner } from "react-bootstrap";
 import API from "./API"
-import MyModal from "./MyModal";
+import {MyModal} from "./MyModal";
 
 
 
