@@ -30,7 +30,7 @@ const App = () => {
 			setUser(userTmp);
 		};
 		const getTorneo = async () => {
-			const t = await API.getTorneo();console.log(t);
+			const t = await API.getTorneo();
 			setTorneo(t);
 		}
 		checkAuth().catch((err) => console.log(err));

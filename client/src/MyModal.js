@@ -6,11 +6,10 @@ function MyModal(props) {
     const [message, setMessage] = useState('');
 
 	const handleResult = () => {
-        if(Object.values(value).some(v => !v)) {
+        if(Object.values(value).some(v => !v) && !props.action.ban) {
             setMessage("Riempi tutti i campi!");
             return;
         }
-        console.log(Object.values(value));
         props.action.f(value);
         props.hide();
     }
@@ -25,12 +24,15 @@ function MyModal(props) {
                     {[startSelect, ...props.action.options].map(o => <option>{o.Nome}</option>)}
                 </Form.Control>
             : 
-                <Form.Control
-                    type = {props.action.t}
-                    value = {value[props.action.key]} 
-                    className = "cardStyle" 
-                    onChange = {e => props.update(e.target.value)}
-                />
+            props.action.t === "confirm" ?
+                <Card className = "cardStyle"><div className="m-2">{props.action.ban}</div></Card>
+            :
+            <Form.Control
+                type = {props.action.t}
+                value = {value[props.action.key]} 
+                className = "cardStyle" 
+                onChange = {e => props.update(e.target.value)}
+            />
         );
     }
 
@@ -64,12 +66,13 @@ function ListModal(props) {
     const [message, setMessage] = useState('');
     const [values, setValues] = useState(false);
     useEffect(() => {
+        if(!props.show) return;
 		const getValues = async () => {
-            const v =  await props.getValues();console.log(v)
+            const v =  await props.getValues();
             setValues(v);
 		};
 		getValues().catch((err) => console.log(err));
-	}, []);
+	}, [props.show]);
 
     return(
         <Modal show={props.show} onHide={() => props.hide()}>
@@ -83,7 +86,7 @@ function ListModal(props) {
                 {!values ? <div align="center"><Spinner animation="border" /></div> : values.map(v => 
                     <Form.Group className = "mb-3 mr-2">
                         <Card className = "cardStyle">
-                            <span onClick = {() => {props.select(v.id); props.hide();}}><h2 className = "ml-3">{v.key}</h2></span>
+                            <span onClick = {() => {props.hide(); props.select(v.id);}}><h2 className = "ml-3">{v.key}</h2></span>
                         </Card>
                     </Form.Group>
                 )}

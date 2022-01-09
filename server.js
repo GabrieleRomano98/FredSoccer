@@ -3,14 +3,14 @@
 const express = require("express");
 const morgan = require("morgan"); // logging middleware
 const passport = require("passport");
-const { check, validationResult, body } = require("express-validator"); // validation middleware
+const { validationResult, body } = require("express-validator"); // validation middleware
 const LocalStrategy = require("passport-local").Strategy; // username+psw
 const session = require("express-session");
-const dayjs = require("dayjs");
 const path = require('path');
 
 const userDao = require("./dao/user-dao");
 const mainDao = require("./dao/main-dao");
+const torneoDao = require("./dao/torneo-dao");
 
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
@@ -79,6 +79,7 @@ app.use(passport.session());
 /*** MAIN APIs ***/
 /*****************/
 
+torneoDao.execAPI(app, isLoggedIn);
 
 
 
@@ -129,44 +130,6 @@ app.get("/api/user/:id", (req, res) => {
   } catch (err) {
     res.status(500).json(false);
   }
-});
-
-app.get("/api/Torneo", (req, res) => {
-  const r = !req.session.Torneo ? false : req.session.Torneo;
-    return res.status(200).json({id: r});
-});
-
-app.get("/api/Torneo/Nome", (req, res) => {
-  try {
-    mainDao.getTorneo(req.session.Torneo)
-      .then(Torneo => {
-        res.status(200).json(Torneo);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Tornei", (req, res) => {
-  try {
-    mainDao.getTornei()
-      .then(Tornei => {
-        res.status(200).json(Tornei);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.put("/api/thisTorneo/:id", async (req, res) => {
-  req.session.Torneo = req.params.id;
-  res.status(201).end();
 });
 
 app.get("/api/ads", (req, res) => {

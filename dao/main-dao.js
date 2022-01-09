@@ -3,14 +3,6 @@
 const { getQuerySQL, runQuerySQL } = require("./utility");
 const db = require("../db");
 
-exports.getTorneo = async id => {
-    return await getQuerySQL(db, "SELECT Nome FROM Tornei WHERE id = ?", [id], {Nome: ""}, false, true);
-}
-
-exports.getTornei = async () => {
-    return await getQuerySQL(db, "SELECT * FROM Tornei", [], {id: 0, Nome: ""}, false, false);
-}
-
 exports.getAds = async () => {
     return await getQuerySQL(db, "SELECT * FROM Ads", [], {id: 0, txt: "", img: "", link: ""}, false, false);
 }
