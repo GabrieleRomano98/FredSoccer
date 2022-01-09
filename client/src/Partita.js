@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, Carousel, Spinner } from "react-bootstrap";
+import { Button, Card, Carousel, Spinner } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import { AiFillMobile } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -41,7 +41,10 @@ function Partita(props) {
 
     
     return( !partita ? <div align="center"><Spinner animation="border" /></div> :
-        <Container>
+        <Container className="justify-content-center">
+            { !props.admin && <Link to = {"/Partita/admin/" + props.id}>
+                <Button className="cardStyle m-3 w-75" size="lg" variant="dark">Gestisci partita</Button>
+            </Link> }
             <BaseCard
                 title={() => <h6>{partita.date} {partita.time}</h6>}
                 left={() => <PartitaRow id={partita.s1.id} t={partita.s1.t} g={partita.s1.g} />}

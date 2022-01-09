@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, Container, Row, Spinner } from "react-bootstrap";
 import API from "./API"
-import {ListModal, MyModal} from "./MyModal";
+import { ListModal, MyModal } from "./MyModal";
 
 let torneo, squadra;
 
@@ -10,33 +10,8 @@ function AreaRiservata() {
     const [actions, setActions] = useState(false);
     const [message, setMessage] = useState(false);
     const selectAction = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? {...a, show: open} : a));
-    const selectTorneo = (n, list2 = false) => {
-        if(list2)
-            setActions(actions => actions.map(a => {
-                if(a.n === n) {
-                    a.getValues = a.getValues2;
-                    a.select = a.select2;
-                    a.list = 2;
-                    a.lt = a.lt2;
-                }
-                return a;
-            }))
-        else
-            setActions(actions => actions.map(a => a.n === n ? {...a, show: true} : a))
-    };
-    const openList = (n, open = true) => {
-        setActions(actions => actions.map(a => {
-            if(a.n === n) {
-                a.list = open;
-                if(a.getValues2 !== undefined) {
-                    a.getValues = a.getValues1;
-                    a.select = a.select1;
-                    a.lt = a.lt1;
-                }
-            }
-            return a;
-        }))
-    };
+    const openList = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list: open}) : a));
+    const openList2 = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list2: open}) : a));
     useEffect(() => {
 		const getActions = async () => {
             if(!actions) {
@@ -90,7 +65,7 @@ function AreaRiservata() {
                         values: [{l: "Nome", t: "text", k: "Nome"}],
                         lt: "Seleziona Torneo", ls: true,
                         getValues: API.getTornei,
-                        select: (id, n) => {torneo = id; selectTorneo(n)}
+                        select: (id, n) => {torneo = id; selectAction(n)}
                     },
                     {
                         n: "Elimina Torneo", ban: true,
@@ -98,16 +73,13 @@ function AreaRiservata() {
                         values: [{l: "", ban: "Vuoi eliminare il torneo? Tutte le sue partite andranno perse!", t: "confirm"}],
                         lt: "Seleziona Torneo", ls: true,
                         getValues: API.getTornei,
-                        select: (id, n) => {torneo = id; selectTorneo(n)}
+                        select: (id, n) => {torneo = id; selectAction(n)}
                     },
                     {
                         n: "Aggiungi Iscrizione",
                         lt: "Seleziona Torneo", ls: true,
                         getValues: API.getTornei, values: [],
-                        select: (id, n) => {torneo = id; selectTorneo(n, true)},
-                        lt1: "Seleziona Torneo",
-                        getValues1: API.getTornei,
-                        select1: (id, n) => {torneo = id; selectTorneo(n, true)},
+                        select: (id, n) => {torneo = id; openList2(n)},
                         lt2: "Seleziona squadra",
                         getValues2: () => API.getSquadreTorneo(torneo), 
                         select2: id => {API.addIscrizione(torneo, id); setMessage("Iscrizione aggiunta")}
@@ -117,21 +89,17 @@ function AreaRiservata() {
                         f: v => {API.removeIscrizione(torneo, squadra); setMessage("Iscrizione annullata");},
                         values: [{l: "", ban: "Vuoi annullare l'iscrizione? Le partite della squadra nel torneo andranno perse!", t: "confirm"}],
                         lt: "Seleziona Torneo", ls: true,
-                        select: (id, n) => {torneo = id; selectTorneo(n, true)},
+                        select: (id, n) => {torneo = id; openList2(n)},
                         getValues: API.getTornei,
-                        lt1: "Seleziona Torneo",
-                        select1: (id, n) => {torneo = id; selectTorneo(n, true)},
-                        getValues1: API.getTornei,
                         lt2: "Seleziona squadra",
                         getValues2: () => API.getSquadreTorneo(torneo, false),
-                        select2: (id, n) => {squadra = id; selectTorneo(n)}
+                        select2: (id, n) => {squadra = id; selectAction(n)}
                     },
                 ];
                 setActions(a);
             }
 		};
-        
-		    getActions().catch((err) => console.log(err));
+        getActions().catch((err) => console.log(err));
 	}, [actions]);
 
     return(
@@ -142,6 +110,7 @@ function AreaRiservata() {
                 <Row className='justify-content-center'>
                     <MyModal show={!!a.show} hide={() => selectAction(a.n, false)} action={a}/>
                     <ListModal title = {a.lt} show={a.list} hide={() => openList(a.n, false)} getValues={a.getValues} select={id => a.select(id, a.n)}/>
+                    <ListModal title = {a.lt2} show={a.list2} hide={() => openList2(a.n, false)} getValues={a.getValues2} select={id => a.select2(id, a.n)}/>
                     <Button className="cardStyle m-3 w-75" size="lg" variant="dark" onClick={() => !a.ls ? selectAction(a.n) : openList(a.n)}>
                         {a.n}
                     </Button>

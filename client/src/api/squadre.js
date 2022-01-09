@@ -4,9 +4,7 @@ async function getClassifica() {
 	const response = await fetch("/api/Classifica");
 	const Classifica = await response.json();
 	if (response.ok) return Classifica.map(s => {
-        let o = Object.entries(s); 
-        o.splice(1, 1, ["Squadra", s.Nome]); 
-        return Object.fromEntries(o)}
+        return Object.fromEntries(Object.entries(s).filter(v => v[0] !== "img"))}
     );
 	else throw Classifica;
 }

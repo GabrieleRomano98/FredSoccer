@@ -1,15 +1,9 @@
 # ToDo List
 
-## Torneo
-
-* Gestisci iscrizioni
-
 ## Partita
 
 * modifica partita
 * elimina partita ("il risultato e le informazioni inserite verranno persi, sei sicuro di voler continuare?")
-* aggiungi risultato
-* modifica risultato
 * aggiungi cartellino/voto/rete
 * modifica cartellino/voto/rete
 * elimina cartellino/voto/rete

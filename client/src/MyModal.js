@@ -75,7 +75,7 @@ function ListModal(props) {
 	}, [props.show]);
 
     return(
-        <Modal show={props.show} onHide={() => props.hide()}>
+        <Modal show={props.show} onHide={() => {setValues(false); props.hide()}}>
 
             <Modal.Header closeButton style={{backgroundColor: "#f6f2f2"}}>
 				<Modal.Title>{props.title}</Modal.Title>
@@ -86,14 +86,14 @@ function ListModal(props) {
                 {!values ? <div align="center"><Spinner animation="border" /></div> : values.map(v => 
                     <Form.Group className = "mb-3 mr-2">
                         <Card className = "cardStyle">
-                            <span onClick = {() => {props.hide(); props.select(v.id);}}><h2 className = "ml-3">{v.key}</h2></span>
+                            <span onClick = {() => {setValues(false); props.hide(); props.select(v.id);}}><h2 className = "ml-3">{v.key}</h2></span>
                         </Card>
                     </Form.Group>
                 )}
 			</Modal.Body>
 
 			<Modal.Footer  style={{backgroundColor: "#f6f2f2"}}>
-				<Button variant="danger" className="cardStyle" onClick={() => props.hide()}>Chiudi</Button>
+				<Button variant="danger" className="cardStyle" onClick={() => {setValues(false); props.hide()}}>Chiudi</Button>
 			</Modal.Footer>
 
 		</Modal>

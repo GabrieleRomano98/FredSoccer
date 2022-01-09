@@ -61,6 +61,7 @@ exports.execAPI = (app, isLoggedIn) =>{
             const sql = "DELETE FROM Partita_meta WHERE id_partita IN(SELECT id FROM Partite WHERE id_tournament = ?)"
             runQuerySQL(db, sql, [req.params.id], false)
             runQuerySQL(db, "DELETE FROM Partite WHERE id_tournament = ?", [req.params.id], false)
+            runQuerySQL(db, "DELETE FROM Iscrizioni WHERE Torneo = ?", [req.params.id], false)
             runQuerySQL(db, "DELETE FROM Tornei WHERE id = ?", [req.params.id], false)
             runQuerySQL(db, "COMMIT;", [], false)
             res.status(200).end();
