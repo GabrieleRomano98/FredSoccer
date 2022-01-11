@@ -16,7 +16,8 @@ function MyModal(props) {
 
     
     const MyForm = props => {
-        const selectFunction = e => props.update(props.action.options.find(v => v.Nome === e.target.value).id);
+        const selectFunction = e => 
+            e.target.value !== startSelect.Nome && props.update(props.action.options.find(v => v.Nome === e.target.value).id);
         const startSelect = {Nome: "Scegli squadra", id: false};
         return (
             props.action.t === "select" ? 

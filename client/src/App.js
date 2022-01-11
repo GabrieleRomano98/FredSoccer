@@ -64,7 +64,7 @@ const App = () => {
 				<Route exact path='/Notizie' render={() => <Notizie />}/>
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} />}/>
 				<Route exact path='/Partite' render={() => !torneo ? <Redirect to = "/" /> : <Partite />}/>
-				<Route exact path='/Partita/:id' render={props => !torneo ? <Redirect to = "/" /> : <Partita id={props.match.params.id}/>}/>
+				<Route exact path='/Partita/:id' render={props => !torneo ? <Redirect to = "/" /> : <Partita id={props.match.params.id} logged={loggedIn}/>}/>
 				<Route exact path='/Squadra/:id' render={props => !torneo ? <Redirect to = "/" /> : <Squadra id={props.match.params.id}/>}/>
 				<Route exact path='/Classifica' render={() => !torneo ? <Redirect to = "/" /> : <Classifica />}/>
 				<Route exact path='/Login' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin} login={true}/>}/>

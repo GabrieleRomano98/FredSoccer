@@ -20,9 +20,9 @@ async function getPartita(id) {
     },
     s2:{
         id: R[0].id_s2, t: R[0].s2, g: R[0].g_s2, 
-        reti: R[1].filter(r => !r.s1 && r.Key === "Rete").map(e => ({k: e.Giocatore, v: e.Minuto})),
-        cartellini: R[1].filter(r => !r.s1 && r.Key === "Cartellino").map(e => ({k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
-        pagelle: R[1].filter(r => !r.s1 && r.Key === "Voto").map(e => ({k: e.Giocatore, v: e.Value})),
+        reti: R[1].filter(r => !r.s1 && r.Key === "Rete").map(e => ({id: e.id, k: e.Giocatore, v: e.Minuto})),
+        cartellini: R[1].filter(r => !r.s1 && r.Key === "Cartellino").map(e => ({id: e.id, k: e.Giocatore, v: e.Minuto, y: !!e.Value})),
+        pagelle: R[1].filter(r => !r.s1 && r.Key === "Voto").map(e => ({id: e.id, k: e.Giocatore, v: e.Value})),
     },
     date: dayjs(R[0].Date).format("DD/MM/YYYY"), time: R[0].Time};
 	else throw R;
@@ -48,10 +48,31 @@ async function addPartita(partita) {
     });
 }
 
+
+async function updatePartita(id, partita) {console.log(id, partita)
+    return new Promise((resolve, reject) => {
+        fetch('/api/Partita/' + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(partita)
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
 const partiteAPI = {
     getPartite,
     getPartita,
     addPartita,
+    updatePartita
 }
 
 export default partiteAPI;

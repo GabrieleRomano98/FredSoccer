@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button, Card, Carousel, Spinner } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
-import { AiFillMobile } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit, AiFillMobile } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { MyModal } from "./MyModal";
+import { updatePartita } from "./actions";
 import  API from "./API";
 
 const PartitaRow = props => (<>
@@ -24,41 +26,76 @@ const BaseCard = props => (
 
 const cardElements = [
     {t: "Reti", k: "reti", m: true},
-    {t: "Cartellini", k: "cartellini", m: true, i: true},
-    {t: "Pagelle", k: "pagelle", c: true}
 ];
 
 function Partita(props) {
 
     const [partita, setPartita] = useState(false);
+    const [actions, setActions] = useState(false);
+    const [dirty, setDirty] = useState(false);
+    const [id, setId] = useState(false);
+    const getID = () => id;
+    const selectAction = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? {...a, show: open} : a));
+    const openList = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list: open}) : a));
+    const openList2 = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list2: open}) : a));
+    const editF = (id, k) => {setId(id, k); selectAction("Modifica " + k);};
+    const deleteF = (id, k) => {setId(id, k); selectAction("Elimina " + k);};
     useEffect(() => {
 		const getPartita = async () => {
             const p =  await API.getPartita(props.id);
-            setPartita(p);console.log(p);
+            setPartita(p);
 		};
+        const getActions = async () => {
+            if(!actions) {
+                const a = await updatePartita(props.id, a => 1, getID);
+                setActions(a);
+            }
+		};
+        getActions().catch((err) => console.log(err));
 		getPartita().catch((err) => console.log(err));
-	}, []);
+	}, [actions, dirty]);
+
+    const IconEdit = props => props.l ? 
+        <span onClick = {props.f}>
+            <AiOutlineEdit size="2em" className="mr-3" style={{float: "right"}}/>
+        </span>
+    : <></>
 
     
     return( !partita ? <div align="center"><Spinner animation="border" /></div> :
         <Container className="justify-content-center">
-            { !props.admin && <Link to = {"/Partita/admin/" + props.id}>
-                <Button className="cardStyle m-3 w-75" size="lg" variant="dark">Gestisci partita</Button>
-            </Link> }
+            {!!actions && actions.map(a => <MyModal show={!!a.show} hide={() => selectAction(a.n, false)} action={a}/>)}
+            <Row className="justify-content-center"><IconEdit f = {() => selectAction("Modifica Partita")} l={props.logged}/></Row>
             <BaseCard
-                title={() => <h6>{partita.date} {partita.time}</h6>}
+                title={() => <><h6>{partita.date} {partita.time} </h6></>}
                 left={() => <PartitaRow id={partita.s1.id} t={partita.s1.t} g={partita.s1.g} />}
                 center = {() => <h1 className="mt-2">-</h1>}
                 right = {() => <PartitaRow id={partita.s2.id} t={partita.s2.t} g={partita.s2.g} />}
             />
+            <Row inline className="justify-content-center"> 
+                <Button className="cardStyle m-1" size="lg" variant="dark" onClick={() => selectAction("Aggiorna Risultato")}>
+                    Modifica Risultato
+                </Button>
+                <Button className="cardStyle m-1" size="lg" variant="dark" onClick={() => {setDirty(d => !d); API.updatePartita(props.id, {g_s1: null, g_s2:  null});}}>
+                    Rimuovi Risultato
+                </Button>
+            </Row>
             <Carousel controls={false}>
                 {partita.s1.g !== null && cardElements.map(e =>
                     <Carousel.Item>
                         <BaseCard
                             title = {() => <h5>{e.t}</h5>}
-                            left = {() => <>{partita.s1[e.k].map(r => <h6>{r.k}{e.c && ":"} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
+                            left = {() => <>{partita.s1[e.k].map(r => <h6>
+                                {r.k}{e.c && ":"} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
+                                <span onClick={() => editF(r.id, e.k)}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                <span onClick={() => deleteF(r.id, e.k)}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                            </h6>)}</>}
                             center = {() => <div style={{height: '100%', width: 1, backgroundColor: '#97fb57'}}></div>}
-                            right = {() => <>{partita.s2[e.k].map(r => <h6>{r.k} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}</h6>)}</>}
+                            right = {() => <>{partita.s2[e.k].map(r => <h6>
+                                {r.k} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
+                                <span onClick={() => editF(r.id, e.k)}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                <span onClick={() => deleteF(r.id, e.k)}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                            </h6>)}</>}
                         />
                     </Carousel.Item>
                 )}

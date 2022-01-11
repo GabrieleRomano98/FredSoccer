@@ -1,5 +1,12 @@
 import dayjs from "dayjs";
 
+async function getSquadre() {
+	const response = await fetch("/api/Squadre");
+	const Squadre = await response.json();
+	if (response.ok) return Squadre;
+	else throw Squadre;
+}
+
 async function getClassifica() {
 	const response = await fetch("/api/Classifica");
 	const Classifica = await response.json();
@@ -51,6 +58,7 @@ async function addSquadra(squadra) {
 }
 
 const squadreAPI = {
+    getSquadre,
     getClassifica,
     getSquadra,
     getPartiteSquadra,

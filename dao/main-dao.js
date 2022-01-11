@@ -15,13 +15,13 @@ exports.getNotizie = async () => {
     return await getQuerySQL(db, "SELECT id, Titolo, Data FROM Articoli ORDER BY Data", [], {id: 0, Titolo: "", Data: ""}, false, false);
 }
 
-exports.getSquadre = async (t, id = false) => {
+exports.getClassifica = async (t, id = false) => {
     let [cond, par] = !!id ? [" AND id = ?", [id]] : ["", []];
     const base = "(SELECT COUNT(*) FROM Partite p WHERE id_tournament = ? AND ";
     const sql = "SELECT s.id, s.Nome, " + (!!id ? "s.img, " : "")
         + "3*" + base + "(p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) +"
         + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS PT,"
-        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id)) AS PG,"
+        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND WHERE NOT g_s1 ISNULL) AS PG,"
         + base + " (p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) AS V,"
         + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS P,"
         + base + " (p.id_s1 = s.id AND p.g_s1 < p.g_s2 OR p.id_s2 = s.id AND p.g_s2 < p.g_s1)) AS S,"
@@ -33,6 +33,10 @@ exports.getSquadre = async (t, id = false) => {
     par = [t, t, t, t, t, t, t, t, t, t, t, ...par];
     const obj = { id: 0, Nome: "", img: "", PT: 0, PG: 0, V: 0, P: 0, S: 0, GF: 0, GS: 0 };
     return await getQuerySQL(db, sql + cond, par, obj, false, !!id);
+}
+
+exports.getSquadre = async () => {
+    return await getQuerySQL(db, "SELECT id, Nome FROM Squadre", [], {id: 0, Nome: ""}, false, false);
 }
 
 exports.getPartite = async (tournament = 1, idP = false, idS = false) => {
@@ -63,9 +67,9 @@ exports.getGiocatori = async id => {
     return await getQuerySQL(db, sql, [id], obj, false, false);
 }
 
-exports.addPartita = async (Tournament, Partita) => {
+exports.addPartita = async (Partita) => {
     const sql = "INSERT INTO Partite(id_tournament, id_s1, id_s2, Date, Time) VALUES(?, ?, ?, ?, ?)";
-    const par = [Tournament, ...Object.values(Partita)];
+    const par = [...Object.values(Partita)];
     return await runQuerySQL(db, sql, par, false);
 }
 
@@ -84,5 +88,14 @@ exports.addNotizia = async Notizia => {
 exports.addAd = async Ad => {
     const sql = "INSERT INTO Ads(txt, img, link) VALUES(?, ?, ?)";
     const par = Object.values(Ad);
+    return await runQuerySQL(db, sql, par, false);
+}
+
+exports.updatePartita = async (id, partita) => {
+    const sql = Object.keys(partita).reduce(
+        (prv, crr, i) => prv + crr + " = ? " + (i === Object.keys(partita).length -1 ? "WHERE id = ?" : ", "),
+        "UPDATE Partite SET "
+    );console.log(sql, )
+    const par = [...Object.values(partita), id];
     return await runQuerySQL(db, sql, par, false);
 }

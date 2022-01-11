@@ -176,7 +176,21 @@ app.get("/api/Notizie", (req, res) => {
 
 app.get("/api/Classifica", (req, res) => {
   try {
-    mainDao.getSquadre(req.session.Torneo)
+    mainDao.getClassifica(req.session.Torneo)
+      .then(Squadre => {
+        res.status(200).json(Squadre);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
+app.get("/api/Squadre", (req, res) => {
+  try {
+    mainDao.getSquadre()
       .then(Squadre => {
         res.status(200).json(Squadre);
       })
@@ -190,7 +204,7 @@ app.get("/api/Classifica", (req, res) => {
 
 app.get("/api/Squadra/:id", (req, res) => {
   try {
-    mainDao.getSquadre(req.session.Torneo, req.params.id)
+    mainDao.getClassifica(req.session.Torneo, req.params.id)
       .then(Squadra => {
         res.status(200).json(Squadra);
       })
@@ -271,14 +285,8 @@ app.get("/api/Giocatori/:id", (req, res) => {
 });
 
 app.post("/api/Partita", isLoggedIn, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
     try {
-      if(!req.session.Torneo)
-        return res.status(500).json({error: "Seleziona un torneo nella home page"});
-      await mainDao.addPartita(1, req.body);
+      await mainDao.addPartita(req.body);
       res.status(201).end();
     } catch (err) {
       res.status(503).json({ error: err });
@@ -287,10 +295,6 @@ app.post("/api/Partita", isLoggedIn, async (req, res) => {
 );
 
 app.post("/api/Squadra", isLoggedIn, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
     try {
       await mainDao.addSquadra(req.body);
       res.status(201).end();
@@ -301,12 +305,18 @@ app.post("/api/Squadra", isLoggedIn, async (req, res) => {
 );
 
 app.post("/api/Ad", isLoggedIn, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
     try {
       await mainDao.addAd(req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.put("/api/Partita/:id", isLoggedIn, async (req, res) => {
+    try {
+      await mainDao.updatePartita(req.params.id, req.body);
       res.status(201).end();
     } catch (err) {
       res.status(503).json({ error: err });
