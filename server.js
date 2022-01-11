@@ -270,6 +270,20 @@ app.get("/api/Partita/:id", (req, res) => {
   }
 });
 
+app.get("/api/Giocatori", (req, res) => {
+  try {
+    mainDao.getGiocatori()
+      .then(Giocatori => {
+        res.status(200).json(Giocatori);
+      })
+      .catch((err) => {
+        res.status(503).json({});
+      });
+  } catch (err) {
+    res.status(500).json(false);
+  }
+});
+
 app.get("/api/Giocatori/:id", (req, res) => {
   try {
     mainDao.getGiocatori(req.params.id)
@@ -317,6 +331,36 @@ app.post("/api/Ad", isLoggedIn, async (req, res) => {
 app.put("/api/Partita/:id", isLoggedIn, async (req, res) => {
     try {
       await mainDao.updatePartita(req.params.id, req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.delete("/api/Partita/:id", isLoggedIn, async (req, res) => {
+    try {
+      await mainDao.deletePartita(req.params.id);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.put("/api/Partita/Meta/:id", isLoggedIn, async (req, res) => {
+    try {
+      await mainDao.updatePartitaMeta(req.params.id, req.body);
+      res.status(201).end();
+    } catch (err) {
+      res.status(503).json({ error: err });
+    }
+  }
+);
+
+app.delete("/api/Partita/Meta/:id", isLoggedIn, async (req, res) => {
+    try {
+      await mainDao.deletePartitaMeta(req.params.id);
       res.status(201).end();
     } catch (err) {
       res.status(503).json({ error: err });

@@ -4,7 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { AiOutlineDelete, AiOutlineEdit, AiFillMobile } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { MyModal } from "./MyModal";
-import { updatePartita } from "./actions";
+import { updatePartita, putSquadra } from "./actions";
 import  API from "./API";
 
 const PartitaRow = props => (<>
@@ -27,45 +27,43 @@ const BaseCard = props => (
 const cardElements = [
     {t: "Reti", k: "reti", m: true},
 ];
+let idSquadra;
+let id;
 
 function Partita(props) {
 
     const [partita, setPartita] = useState(false);
     const [actions, setActions] = useState(false);
     const [dirty, setDirty] = useState(false);
-    const [id, setId] = useState(false);
     const getID = () => id;
+
     const selectAction = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? {...a, show: open} : a));
-    const openList = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list: open}) : a));
-    const openList2 = (n, open = true) => setActions(actions => actions.map(a => a.n === n ? ({...a, list2: open}) : a));
-    const editF = (id, k) => {setId(id, k); selectAction("Modifica " + k);};
-    const deleteF = (id, k) => {setId(id, k); selectAction("Elimina " + k);};
+
+    const editF = (Id, k, s) => {id = Id; idSquadra = partita[s].id; selectAction("Modifica " + k);};
+    const deleteF = (Id, k, s) => {id = Id; idSquadra = partita[s].id; selectAction("Elimina Informazioni");};
+
     useEffect(() => {
 		const getPartita = async () => {
-            const p =  await API.getPartita(props.id);
+            const p =  await API.getPartita(props.id);console.log(p);
             setPartita(p);
 		};
         const getActions = async () => {
             if(!actions) {
-                const a = await updatePartita(props.id, a => 1, getID);
+                const a = await updatePartita(props.id, g => g.Squadra === idSquadra, a => 1, getID);
                 setActions(a);
             }
 		};
         getActions().catch((err) => console.log(err));
 		getPartita().catch((err) => console.log(err));
 	}, [actions, dirty]);
-
-    const IconEdit = props => props.l ? 
-        <span onClick = {props.f}>
-            <AiOutlineEdit size="2em" className="mr-3" style={{float: "right"}}/>
-        </span>
-    : <></>
-
     
     return( !partita ? <div align="center"><Spinner animation="border" /></div> :
         <Container className="justify-content-center">
             {!!actions && actions.map(a => <MyModal show={!!a.show} hide={() => selectAction(a.n, false)} action={a}/>)}
-            <Row className="justify-content-center"><IconEdit f = {() => selectAction("Modifica Partita")} l={props.logged}/></Row>
+            <Row className="justify-content-center">
+                <span onClick = {() => selectAction("Modifica Partita")}><AiOutlineEdit size="2em" className="mr-3"/></span>
+                <span onClick = {() => selectAction("Elimina Partita")}><AiOutlineDelete size="2em" className="mr-3"/></span>
+            </Row>
             <BaseCard
                 title={() => <><h6>{partita.date} {partita.time} </h6></>}
                 left={() => <PartitaRow id={partita.s1.id} t={partita.s1.t} g={partita.s1.g} />}
@@ -87,14 +85,14 @@ function Partita(props) {
                             title = {() => <h5>{e.t}</h5>}
                             left = {() => <>{partita.s1[e.k].map(r => <h6>
                                 {r.k}{e.c && ":"} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
-                                <span onClick={() => editF(r.id, e.k)}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
-                                <span onClick={() => deleteF(r.id, e.k)}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                <span onClick={() => editF(r.id, e.t, "s1")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                <span onClick={() => deleteF(r.id, e.t, "s1")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
                             </h6>)}</>}
                             center = {() => <div style={{height: '100%', width: 1, backgroundColor: '#97fb57'}}></div>}
                             right = {() => <>{partita.s2[e.k].map(r => <h6>
                                 {r.k} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
-                                <span onClick={() => editF(r.id, e.k)}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
-                                <span onClick={() => deleteF(r.id, e.k)}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                <span onClick={() => editF(r.id, e.t, "s2")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                <span onClick={() => deleteF(r.id, e.t, "s2")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
                             </h6>)}</>}
                         />
                     </Carousel.Item>

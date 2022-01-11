@@ -48,8 +48,7 @@ async function addPartita(partita) {
     });
 }
 
-
-async function updatePartita(id, partita) {console.log(id, partita)
+async function updatePartita(id, partita) {
     return new Promise((resolve, reject) => {
         fetch('/api/Partita/' + id, {
             method: 'PUT',
@@ -68,11 +67,69 @@ async function updatePartita(id, partita) {console.log(id, partita)
     });
 }
 
+async function deletePartita(id) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Partita/' + id, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function updatePartitaMeta(id, partitaMeta) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Partita/Meta/' + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(partitaMeta)
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function deletePartitaMeta(id) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Partita/Meta/' + id, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
 const partiteAPI = {
     getPartite,
     getPartita,
     addPartita,
-    updatePartita
+    updatePartita,
+    deletePartita,
+    updatePartitaMeta,
+    deletePartitaMeta
 }
 
 export default partiteAPI;

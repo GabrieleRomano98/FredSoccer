@@ -57,14 +57,16 @@ exports.getInfoPartita = async id => {
     return await getQuerySQL(db, sql, [id, id], obj, false, false);
 }
 
-exports.getGiocatori = async id => {
-    const sql = "SELECT id, Nome, Cognome, img, "
+exports.getGiocatori = async (id = false) => {
+    const sql = !id ? "SELECT id, Cognome, Squadra FROM Giocatori" 
+        : "SELECT id, Nome, Cognome, img, "
         + "(SELECT COUNT(*) FROM Partita_meta WHERE Key = 'Rete' AND id_giocatore = id) AS Reti, "
         + "(SELECT COUNT(*) FROM Partita_meta WHERE Key = 'Voto' AND id_giocatore = id) AS Presenze, "
         + "(SELECT AVG(VALUE) FROM Partita_meta WHERE Key = 'Voto' AND id_giocatore = id) AS Media "
         + "FROM Giocatori WHERE Squadra = ? ";
-    const obj = { id: 0, Nome: "", Cognome: "", img: "", Reti: 0, Presenze: 0, Media: 0 };
-    return await getQuerySQL(db, sql, [id], obj, false, false);
+    const obj = !id ? {id:0, Cognome: "", Squadra: 0} : { id: 0, Nome: "", Cognome: "", img: "", Reti: 0, Presenze: 0, Media: 0 };
+    const par = !id ? [] : [id];
+    return await getQuerySQL(db, sql, par, obj, false, false);
 }
 
 exports.addPartita = async (Partita) => {
@@ -98,4 +100,30 @@ exports.updatePartita = async (id, partita) => {
     );console.log(sql, )
     const par = [...Object.values(partita), id];
     return await runQuerySQL(db, sql, par, false);
+}
+
+exports.deletePartitaMeta = async (id) => {
+    try {
+        runQuerySQL(db, "BEGIN TRANSACTION;", [], false)
+        runQuerySQL(db, "DELETE FROM Partita_meta WHERE id_partita = ?", [id], false);
+        runQuerySQL(db, "DELETE FROM Partite WHERE id = ?", [id], false);
+        runQuerySQL(db, "COMMIT;", [], false)
+    }
+    catch(e) {
+        runQuerySQL(db, "ROLLBACK;", [], false)
+        throw e;
+    }
+}
+
+exports.updatePartitaMeta = async (id, partitaMeta) => {
+    const sql = Object.keys(partitaMeta).reduce(
+        (prv, crr, i) => prv + crr + " = ? " + (i === Object.keys(partitaMeta).length -1 ? "WHERE id = ?" : ", "),
+        "UPDATE Partita_meta SET "
+    );console.log(sql, )
+    const par = [...Object.values(partitaMeta), id];
+    return await runQuerySQL(db, sql, par, false);
+}
+
+exports.deletePartitaMeta = async (id) => {
+    return await runQuerySQL(db, "DELETE FROM Partita_meta WHERE id = ?", [id], false);
 }

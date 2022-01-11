@@ -1,16 +1,18 @@
 import API from "./API";
 
 let torneo, squadra;
+const putSquadra = s => squadra = s;
 
 const a_AreaRiservata = async (openForm, openList, feedback) => {
     const o = await API.getSquadre();
+    const g = await API.getGiocatori();
     return [
         {
             n: "Aggiungi Partita",
             f: v => {API.addPartita({ torneo: torneo, ...v }); feedback("Partita aggiunta")}, 
             values: [
-                {l: "Squadra di casa", t: "select", k: "id_s1", options: o},
-                {l: "Squadra ospite", t: "select", k: "id_s2", options: o},
+                {l: "Squadra di casa", t: "select", k: "id_s1", options: o, filt: () => 1},
+                {l: "Squadra ospite", t: "select", k: "id_s2", options: o, filt: () => 1},
                 {l: "Data", t: "date", k: "Date"},
                 {l: "Ora", t: "time", k: "Time"}
             ],
@@ -89,18 +91,24 @@ const a_AreaRiservata = async (openForm, openList, feedback) => {
     ];
 }
 
-const updatePartita = async (id, feedback, getID) => {
+const updatePartita = async (id, checkSquadra, feedback, getID) => {
     const o = await API.getSquadre();
+    const g = await API.getGiocatori();
     return [
         {
             n: "Modifica Partita",
             f: v => {API.updatePartita(id, v); feedback("Partita modificata")}, 
             values: [
-                {l: "Squadra di casa", t: "select", k: "id_s1", options: o},
-                {l: "Squadra ospite", t: "select", k: "id_s2", options: o},
+                {l: "Squadra di casa", t: "select", k: "id_s1", options: o, filt: () => 1},
+                {l: "Squadra ospite", t: "select", k: "id_s2", options: o, filt: () => 1},
                 {l: "Data", t: "date", k: "Date"},
                 {l: "Ora", t: "time", k: "Time"}
             ]
+        },
+        {
+            n: "Elimina Partita", ban: true,
+            f: v => {API.deletePartita(id); feedback("Partita eliminata");},
+            values: [{l: "", ban: "Vuoi eliminare la partita e tutte le informazioni associate?", t: "confirm"}]
         },
         {
             n: "Aggiorna Risultato",
@@ -112,15 +120,20 @@ const updatePartita = async (id, feedback, getID) => {
         },
         {
             n: "Modifica Reti",
-            f: v => {/*API.updatePartitaMeta(getID, v); feedback("Risultato aggiornato")*/console.log(22)}, 
+            f: v => {API.updatePartitaMeta(getID(), v); feedback("Risultato aggiornato");}, 
             values: [
-                {l: "Giocatore", t: "select", k: "id_giocatore", options: []},
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
                 {l: "Minuto", t: "number", k: "Minuto"}
             ]
+        },
+        {
+            n: "Elimina Informazioni", ban: true,
+            f: v => {API.deletePartitaMeta(getID()); feedback("Informazione eliminata");},
+            values: [{l: "", ban: "Vuoi eliminare l'informazione selezionata?", t: "confirm"}]
         },
     ];
 }
 
 
 
-export { a_AreaRiservata, updatePartita };
+export { a_AreaRiservata, updatePartita, putSquadra };

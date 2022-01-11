@@ -18,11 +18,11 @@ function MyModal(props) {
     const MyForm = props => {
         const selectFunction = e => 
             e.target.value !== startSelect.Nome && props.update(props.action.options.find(v => v.Nome === e.target.value).id);
-        const startSelect = {Nome: "Scegli squadra", id: false};
+        const startSelect = {Nome: "Scegli opzione", id: false};
         return (
             props.action.t === "select" ? 
                 <Form.Control as="select" className="cardStyle" onChange = {selectFunction}>
-                    {[startSelect, ...props.action.options].map(o => <option>{o.Nome}</option>)}
+                    {[startSelect, ...props.action.options.filter(props.action.filt)].map(o => <option>{o.Nome}</option>)}
                 </Form.Control>
             : 
             props.action.t === "confirm" ?

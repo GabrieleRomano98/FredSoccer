@@ -31,10 +31,12 @@ async function getPartiteSquadra(id) {
 }
 
 
-async function getGiocatori(id) {
+async function getGiocatori(id = "") {
 	const response = await fetch("/api/Giocatori/" + id);
 	const Giocatori = await response.json();
-	if (response.ok) return Giocatori.map(g => ({id: g.id, nome: g.Nome+" "+g.Cognome, m: g.Media, p: g.Presenze, g: g.Reti, i: g.img}));
+	if (response.ok) return (
+        id === "" ? Giocatori.map(g => ({Nome: g.Cognome, id: g.id, Squadra: g.Squadra}))
+        : Giocatori.map(g => ({id: g.id, nome: g.Nome+" "+g.Cognome, m: g.Media, p: g.Presenze, g: g.Reti, i: g.img})));
 	else throw Giocatori;
 }
 
