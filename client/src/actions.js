@@ -1,6 +1,7 @@
+import { useHistory } from "react-router-dom";
 import API from "./API";
 
-let torneo, squadra;
+let torneo, squadra, tipo;
 const putSquadra = s => squadra = s;
 
 const a_AreaRiservata = async (openForm, openList, feedback) => {
@@ -91,7 +92,7 @@ const a_AreaRiservata = async (openForm, openList, feedback) => {
     ];
 }
 
-const updatePartita = async (id, checkSquadra, feedback, getID) => {
+const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
     const o = await API.getSquadre();
     const g = await API.getGiocatori();
     return [
@@ -107,7 +108,7 @@ const updatePartita = async (id, checkSquadra, feedback, getID) => {
         },
         {
             n: "Elimina Partita", ban: true,
-            f: v => {API.deletePartita(id); feedback("Partita eliminata");},
+            f: v => {API.deletePartita(id); goBack();},
             values: [{l: "", ban: "Vuoi eliminare la partita e tutte le informazioni associate?", t: "confirm"}]
         },
         {
@@ -119,11 +120,53 @@ const updatePartita = async (id, checkSquadra, feedback, getID) => {
             ]
         },
         {
+            n: "Aggiungi Reti",
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Rete", ...v}); feedback("Rete aggiunta")}, 
+            values: [
+                {l: "Minuto", t: "number", k: "Minuto"},
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
+            ]
+        },
+        {
             n: "Modifica Reti",
-            f: v => {API.updatePartitaMeta(getID(), v); feedback("Risultato aggiornato");}, 
+            f: v => {API.updatePartitaMeta(getID(), v); feedback("Rete modificata");}, 
             values: [
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
                 {l: "Minuto", t: "number", k: "Minuto"}
+            ]
+        },
+        {
+            n: "Aggiungi Cartellini",
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Cartellino", ...v}); feedback("Cartellino aggiunto")}, 
+            values: [
+                {l: "Minuto", t: "number", k: "Minuto"},
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
+                {l: "Tipo", t: "select", k: "Value", options: [{id: '0', Nome: "Rosso"}, {id: '1', Nome: "Giallo"}], filt: () => 1},
+            ]
+        },
+        {
+            n: "Modifica Cartellini",
+            f: v => {API.updatePartitaMeta(getID(), v); feedback("Cartellino modificato");}, 
+            values: [
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
+                {l: "Minuto", t: "number", k: "Minuto"},
+                {l: "Tipo", t: "select", k: "Value", options: [{id: 1, Nome: "Giallo"}, {id: 0, Nome: "Rosso"}], filt: () => 1},
+            ]
+        },
+        {
+            n: "Aggiungi Pagelle",
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Voto", ...v}); feedback("Voto aggiunto")}, 
+            values: [
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
+                {l: "Voto", t: "number", k: "Value"},
+            ]
+        },
+        {
+            n: "Modifica Pagelle",
+            f: v => {API.updatePartitaMeta(getID(), v); feedback("Voto modificatao");}, 
+            values: [
+                {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
+                {l: "Voto", t: "number", k: "Value"},
             ]
         },
         {
@@ -134,6 +177,26 @@ const updatePartita = async (id, checkSquadra, feedback, getID) => {
     ];
 }
 
+const updateNotizia = async (id, feedback, goBack) => {
+    return [
+        {
+            n: "Modifica Notizia",
+            f: v => {API.updateNotizia(id, v); feedback("Voto modificatao");}, 
+            values: [
+                {l: "Titolo", t: "text", k: "Titolo"},
+                {l: "Data", t: "date", k: "Data"},
+                {l: "Testo", t: "text", k: "Text"},
+                {l: "Link immagine", t: "text", k: "img"},
+            ]
+        },
+        {
+            n: "Elimina Notizia", ban: true,
+            f: v => {API.deleteNotizia(id); goBack();},
+            values: [{l: "", ban: "Vuoi eliminare la notizia?", t: "confirm"}]
+        },
+    ];
+}
 
 
-export { a_AreaRiservata, updatePartita, putSquadra };
+
+export { a_AreaRiservata, updatePartita, putSquadra, updateNotizia };

@@ -11,6 +11,9 @@ const path = require('path');
 const userDao = require("./dao/user-dao");
 const mainDao = require("./dao/main-dao");
 const torneoDao = require("./dao/torneo-dao");
+const partiteDao = require("./dao/partite-dao");
+const adsDao = require("./dao/ads-dao");
+const notizieDao = require("./dao/notizie-dao");
 
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
@@ -80,7 +83,9 @@ app.use(passport.session());
 /*****************/
 
 torneoDao.execAPI(app, isLoggedIn);
-
+partiteDao.execAPI(app, isLoggedIn);
+adsDao.execAPI(app, isLoggedIn);
+notizieDao.execAPI(app, isLoggedIn);
 
 
 /*****************/
@@ -123,48 +128,6 @@ app.get("/api/user/:id", (req, res) => {
     userDao.getUserById(req.params.id)
       .then((user) => {
         res.status(200).json(user);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/ads", (req, res) => {
-  try {
-    mainDao.getAds()
-      .then(Ads => {
-        res.status(200).json(Ads);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Articolo/:id", (req, res) => {
-  try {
-    mainDao.getArticolo(req.params.id)
-      .then(Articolo => {
-        res.status(200).json(Articolo);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Notizie", (req, res) => {
-  try {
-    mainDao.getNotizie(req.params.id)
-      .then(Notizie => {
-        res.status(200).json(Notizie);
       })
       .catch((err) => {
         res.status(503).json({});
@@ -232,44 +195,6 @@ app.get("/api/Squadra/Partite/:id", (req, res) => {
   }
 });
 
-app.get("/api/Partite", (req, res) => {
-  try {
-    if(!req.session.Torneo)
-      return res.status(500).json(false);
-    mainDao.getPartite(req.session.Torneo)
-      .then(Partite => {
-        res.status(200).json(Partite);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Partita/:id", (req, res) => {
-  try {
-    if(!req.session.Torneo)
-      res.status(500).json(false);
-    mainDao.getPartite(req.session.Torneo, req.params.id)
-      .then(Partita => {
-        mainDao.getInfoPartita(req.params.id)
-        .then(Info => {
-          res.status(200).json([Partita, Info]);
-        })
-        .catch((err) => {
-          res.status(503).json({});
-        })
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
 app.get("/api/Giocatori", (req, res) => {
   try {
     mainDao.getGiocatori()
@@ -298,69 +223,9 @@ app.get("/api/Giocatori/:id", (req, res) => {
   }
 });
 
-app.post("/api/Partita", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.addPartita(req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
 app.post("/api/Squadra", isLoggedIn, async (req, res) => {
     try {
       await mainDao.addSquadra(req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
-app.post("/api/Ad", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.addAd(req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
-app.put("/api/Partita/:id", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.updatePartita(req.params.id, req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
-app.delete("/api/Partita/:id", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.deletePartita(req.params.id);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
-app.put("/api/Partita/Meta/:id", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.updatePartitaMeta(req.params.id, req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
-
-app.delete("/api/Partita/Meta/:id", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.deletePartitaMeta(req.params.id);
       res.status(201).end();
     } catch (err) {
       res.status(503).json({ error: err });

@@ -28,7 +28,6 @@ async function getPartita(id) {
 	else throw R;
 }
 
-
 async function addPartita(partita) {
     return new Promise((resolve, reject) => {
         fetch('/api/Partita', {
@@ -85,6 +84,26 @@ async function deletePartita(id) {
     });
 }
 
+
+async function addPartitaMeta(partitaMeta) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Partita/Meta', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(partitaMeta)
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
 async function updatePartitaMeta(id, partitaMeta) {
     return new Promise((resolve, reject) => {
         fetch('/api/Partita/Meta/' + id, {
@@ -128,6 +147,7 @@ const partiteAPI = {
     addPartita,
     updatePartita,
     deletePartita,
+    addPartitaMeta,
     updatePartitaMeta,
     deletePartitaMeta
 }
