@@ -88,8 +88,10 @@ function Partita(props) {
                             title = {() => <h5>{e.t}</h5>}
                             left = {() => <>{partita.s1[e.k].map(r => <h6>
                                 {r.k}{e.c && ":"} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
-                                <span onClick={() => editF(r.id, e.t, "s1")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
-                                <span onClick={() => deleteF(r.id, "s1")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                {props.logged && <>
+                                    <span onClick={() => editF(r.id, e.t, "s2")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                    <span onClick={() => deleteF(r.id, "s2")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                </>}
                             </h6>)}
                             {!!props.logged &&
                                 <Button className="cardStyle m-1" variant="dark" onClick={() => {id = props.id; idSquadra = partita["s1"].id; selectAction("Aggiungi " + e.t)}}>
@@ -99,8 +101,10 @@ function Partita(props) {
                             center = {() => <div style={{height: '100%', width: 1, backgroundColor: '#97fb57'}}></div>}
                             right = {() => <>{partita.s2[e.k].map(r => <h6>
                                 {r.k} {r.v}{e.m && "'"} {e.i && <AiFillMobile color={r.y? "yellow" : "red"}/>}
-                                <span onClick={() => editF(r.id, e.t, "s2")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
-                                <span onClick={() => deleteF(r.id, "s2")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                {props.logged && <>
+                                    <span onClick={() => editF(r.id, e.t, "s2")}><AiOutlineEdit size="1.4em" className="ml-1"/></span>
+                                    <span onClick={() => deleteF(r.id, "s2")}><AiOutlineDelete size="1.4em" className="ml-2"/></span>
+                                </>}
                             </h6>)}
                             {!!props.logged &&
                                 <Button className="cardStyle m-1" variant="dark" onClick={() => {id = props.id; idSquadra = partita["s2"].id; selectAction("Aggiungi " + e.t)}}>
