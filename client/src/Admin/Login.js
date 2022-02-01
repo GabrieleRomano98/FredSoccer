@@ -1,7 +1,7 @@
 import { Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import { useState } from "react";
-import API from "./API";
+import API from "../API";
 
 function LoginPage(props) {
 

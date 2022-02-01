@@ -6,15 +6,16 @@ import "./App.css";
 import API from "./API";
 import HomePage from "./HomePage";
 import MyTabs from "./Tabs";
-import Partite from "./Partite";
-import Partita from "./Partita";
+import Partite from "./Partite/Partite";
+import Partita from "./Partite/Partita";
 import Classifica from "./Classifica";
 import Squadra from "./Squadra";
 import NavbarTogglerMenu from "./NavbarTogglerMenu"
-import LoginPage from "./Login"
-import Notizie from "./Notizie"
-import Articolo from "./Articolo"
-import AreaRiservata from "./AreaRiservata";
+import LoginPage from "./Admin/Login"
+import Notizie from "./Notizie/Notizie"
+import Articolo from "./Notizie/Articolo"
+import AreaRiservata from "./Admin/AreaRiservata";
+import ManageAds from "./Admin/ManageAds";
 
 const App = () => {
 	const [user, setUser] = useState(null);
@@ -65,11 +66,12 @@ const App = () => {
 				<Route exact path='/Articolo/:id' render={props => <Articolo id={props.match.params.id} logged={loggedIn}/>}/>
 				<Route exact path='/Partite' render={() => !torneo ? <Redirect to = "/" /> : <Partite />}/>
 				<Route exact path='/Partita/:id' render={props => !torneo ? <Redirect to = "/" /> : <Partita id={props.match.params.id} logged={loggedIn}/>}/>
-				<Route exact path='/Squadra/:id' render={props => !torneo ? <Redirect to = "/" /> : <Squadra id={props.match.params.id}/>}/>
+				<Route exact path='/Squadra/:id' render={props => !torneo ? <Redirect to = "/" /> : <Squadra id={props.match.params.id} logged={loggedIn}/>}/>
 				<Route exact path='/Classifica' render={() => !torneo ? <Redirect to = "/" /> : <Classifica />}/>
 				<Route exact path='/Login' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin} login={true}/>}/>
 				<Route exact path='/SignUp' render={() => loggedIn ? <Redirect to="/" /> : <LoginPage doLogin={doLogin}/>}/>
 				<Route exact path='/AreaRiservata' render={() => !loggedIn ? <Redirect to="/" /> : <AreaRiservata />}/>
+				<Route exact path='/Pubblicità' render={() => !loggedIn ? <Redirect to="/" /> : <ManageAds />}/>
 			</Switch>
 		</Router>
 	</>);

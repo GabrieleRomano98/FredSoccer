@@ -82,7 +82,7 @@ function ListModal(props) {
 				<Modal.Title>{props.title}</Modal.Title>
 			</Modal.Header>
 
-			<Modal.Body style={{backgroundColor: "#f6f2f2"}}>
+			<Modal.Body style={{backgroundColor: "#f6f2f2"}} className="scroll-box">
                 {message && <Alert variant="danger" onClose={() => setMessage('')} dismissible>{message}</Alert>}
                 {!values ? <div align="center"><Spinner animation="border" /></div> : values.map(v => 
                     <Form.Group className = "mb-3 mr-2">

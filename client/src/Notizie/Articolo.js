@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Spinner, Card } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { MyModal } from "./MyModal";
-import { updateNotizia } from "./actions";
-import API from "./API";
+import { MyModal } from "../MyModal";
+import { updateNotizia } from "../actions";
+import API from "../API";
 
 function Articolo(props) {
 

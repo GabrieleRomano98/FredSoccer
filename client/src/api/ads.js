@@ -24,9 +24,47 @@ async function addAd(Ad) {
     });
 }
 
+async function updateAd(id, Ad) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Ad/' + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(Ad)
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } 
+            else {
+                response.json()
+                    .then((message) => { reject(message); }) // error message in the response body
+                    .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function deleteAd(id) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Ad/' + id, {method: 'DELETE'})
+            .then((response) => {
+                if (response.ok) {
+                    resolve(null);
+                } 
+                else {
+                    response.json()
+                        .then((message) => { reject(message); }) // error message in the response body
+                        .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+                }
+            })
+            .catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
 const adsAPI = {
     getAds,
-    addAd
+    addAd,
+    updateAd,
+    deleteAd
 }
 
 export default adsAPI

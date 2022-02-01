@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, Container, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import API from "./API";
+import API from "../API";
 
 function Notizie(props) {
     const [notizie, setNotizie] = useState(false);

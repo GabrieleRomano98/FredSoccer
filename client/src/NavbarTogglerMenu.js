@@ -29,6 +29,7 @@ function NavbarTogglerMenu(props) {
                                 {/*<NavDropdown.Item><Link style={{color: "#97fb57"}} to="/SignUp">SignUp</Link></NavDropdown.Item>*/}
                             </>}
                             {props.logged && <NavDropdown.Item><Link to="/AreaRiservata" style={{color: "#97fb57"}}>Area Riservata</Link></NavDropdown.Item>}
+                            {props.logged && <NavDropdown.Item><Link to="/Pubblicità" style={{color: "#97fb57"}}>Pubblicità</Link></NavDropdown.Item>}
                             <NavDropdown.Divider />
                             <NavDropdown.Item><Link to="/About" style={{color: "#97fb57"}}>About</Link></NavDropdown.Item>
                         </Nav>

@@ -59,6 +59,99 @@ async function addSquadra(squadra) {
     });
 }
 
+async function updateSquadra(id, Squadra) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Squadra/' + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(Squadra)
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function deleteSquadra(id) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Squadra/' + id, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function addGiocatore(Giocatore) {
+  return new Promise((resolve, reject) => {
+    fetch('/api/Giocatore', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(Giocatore)
+    }).then((response) => {
+        if (response.ok) {
+        resolve(null);
+        } 
+        else {
+        response.json()
+            .then((message) => { reject(message); }) // error message in the response body
+            .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+        }
+    }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function updateGiocatore(id, Giocatore) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Giocatore/' + id, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(Giocatore)
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
+async function deleteGiocatore(id) {
+    return new Promise((resolve, reject) => {
+        fetch('/api/Giocatore/' + id, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'},
+        }).then((response) => {
+        if (response.ok) {
+                resolve(null);
+        } 
+        else {
+            response.json()
+                .then((message) => { reject(message); }) // error message in the response body
+                .catch(() => { reject({ error: "Impossible to read server response." }) }); // something else
+            }
+        }).catch(() => { reject({ error: "Impossible to communicate with the server." }) }); // connection errors
+    });
+}
+
 const squadreAPI = {
     getSquadre,
     getClassifica,
@@ -66,6 +159,11 @@ const squadreAPI = {
     getPartiteSquadra,
     getGiocatori,
     addSquadra,
+    updateSquadra,
+    deleteSquadra,
+    addGiocatore,
+    updateGiocatore,
+    deleteGiocatore
 }
 
 export default squadreAPI;

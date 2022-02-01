@@ -9,8 +9,8 @@ const session = require("express-session");
 const path = require('path');
 
 const userDao = require("./dao/user-dao");
-const mainDao = require("./dao/main-dao");
 const torneoDao = require("./dao/torneo-dao");
+const squadreDao = require("./dao/squadre-dao");
 const partiteDao = require("./dao/partite-dao");
 const adsDao = require("./dao/ads-dao");
 const notizieDao = require("./dao/notizie-dao");
@@ -83,6 +83,7 @@ app.use(passport.session());
 /*****************/
 
 torneoDao.execAPI(app, isLoggedIn);
+squadreDao.execAPI(app, isLoggedIn);
 partiteDao.execAPI(app, isLoggedIn);
 adsDao.execAPI(app, isLoggedIn);
 notizieDao.execAPI(app, isLoggedIn);
@@ -136,102 +137,6 @@ app.get("/api/user/:id", (req, res) => {
     res.status(500).json(false);
   }
 });
-
-app.get("/api/Classifica", (req, res) => {
-  try {
-    mainDao.getClassifica(req.session.Torneo)
-      .then(Squadre => {
-        res.status(200).json(Squadre);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Squadre", (req, res) => {
-  try {
-    mainDao.getSquadre()
-      .then(Squadre => {
-        res.status(200).json(Squadre);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Squadra/:id", (req, res) => {
-  try {
-    mainDao.getClassifica(req.session.Torneo, req.params.id)
-      .then(Squadra => {
-        res.status(200).json(Squadra);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Squadra/Partite/:id", (req, res) => {
-  try {
-    if(!req.session.Torneo)
-      res.status(500).json(false);
-    mainDao.getPartite(req.session.Torneo, false, req.params.id)
-      .then(Partite => {
-        res.status(200).json(Partite);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Giocatori", (req, res) => {
-  try {
-    mainDao.getGiocatori()
-      .then(Giocatori => {
-        res.status(200).json(Giocatori);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.get("/api/Giocatori/:id", (req, res) => {
-  try {
-    mainDao.getGiocatori(req.params.id)
-      .then(Giocatori => {
-        res.status(200).json(Giocatori);
-      })
-      .catch((err) => {
-        res.status(503).json({});
-      });
-  } catch (err) {
-    res.status(500).json(false);
-  }
-});
-
-app.post("/api/Squadra", isLoggedIn, async (req, res) => {
-    try {
-      await mainDao.addSquadra(req.body);
-      res.status(201).end();
-    } catch (err) {
-      res.status(503).json({ error: err });
-    }
-  }
-);
 
 // POST /api/newUser
 app.post(

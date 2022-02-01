@@ -29,7 +29,7 @@ exports.execAPI = (app, isLoggedIn) =>{
         }
     });
   
-    app.post("/api/Notizie", async (req, res) => {
+    app.post("/api/Notizie", isLoggedIn, async (req, res) => {
         try {
             const sql = "INSERT INTO Articoli(Titolo, Data, Text, img) VALUES(?, ?, ?, ?)";
             const par = Object.values(req.body);
@@ -40,7 +40,7 @@ exports.execAPI = (app, isLoggedIn) =>{
         }
     });
   
-    app.put("/api/Notizie/:id", async (req, res) => {
+    app.put("/api/Notizie/:id", isLoggedIn, async (req, res) => {
         try {
             const sql = "UPDATE Articoli SET Titolo = ?, Data = ?, Text = ?, img = ? WHERE id = ?";
             const par = [...Object.values(req.body), req.params.id];
@@ -51,7 +51,7 @@ exports.execAPI = (app, isLoggedIn) =>{
         }
     });
   
-    app.delete("/api/Notizie/:id", async (req, res) => {
+    app.delete("/api/Notizie/:id", isLoggedIn, async (req, res) => {
         try {
             const sql = "DELETE FROM Articoli WHERE id = ?";
             await runQuerySQL(db, sql, req.params.id, false);

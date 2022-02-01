@@ -87,7 +87,7 @@ exports.execAPI = (app, isLoggedIn) =>{
         }
     });
     
-    app.post("/api/Torneo/Iscrizione/:id", (req, res) => {
+    app.post("/api/Torneo/Iscrizione/:id", isLoggedIn, (req, res) => {
         try {
             runQuerySQL(db, "INSERT INTO Iscrizioni VALUES(?, ?)", [req.body.squadra, req.params.id], false)
             res.status(200).end();
@@ -96,7 +96,7 @@ exports.execAPI = (app, isLoggedIn) =>{
         }
     });
     
-    app.delete("/api/Torneo/Iscrizione/:id", (req, res) => {
+    app.delete("/api/Torneo/Iscrizione/:id", isLoggedIn, (req, res) => {
         try {
             runQuerySQL(db, "BEGIN TRANSACTION;", [], false)
             let sql = 

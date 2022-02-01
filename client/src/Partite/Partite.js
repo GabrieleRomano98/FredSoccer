@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Card, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import { SquadraRow } from "./SquadraElements";
-import  API from "./API";
+import { SquadraRow } from "../SquadraElements";
+import  API from "../API";
 
 function Partite(props) {
     const [partite, setPartite] = useState(false);

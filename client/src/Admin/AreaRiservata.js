@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alert, Button, Container, Row, Spinner } from "react-bootstrap";
-import { a_AreaRiservata } from "./actions";
-import { ListModal, MyModal } from "./MyModal";
+import { a_AreaRiservata } from "../actions";
+import { ListModal, MyModal } from "../MyModal";
 
 
 function AreaRiservata() {

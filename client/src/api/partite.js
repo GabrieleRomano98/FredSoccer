@@ -84,7 +84,6 @@ async function deletePartita(id) {
     });
 }
 
-
 async function addPartitaMeta(partitaMeta) {
     return new Promise((resolve, reject) => {
         fetch('/api/Partita/Meta', {

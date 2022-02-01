@@ -177,6 +177,47 @@ const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
     ];
 }
 
+const updateSquadra = async (id, feedback, exit, getId) => {
+    return [
+        {
+            n: "Modifica Squadra",
+            f: v => {API.updateSquadra(id, v); feedback();}, 
+            values: [
+                {l: "Nome", t: "text", k: "Nome"},
+                {l: "Link immagine", t: "text", k: "img"},
+            ]
+        },
+        {
+            n: "Elimina Squadra", ban: true,
+            f: v => {API.deleteSquadra(id); exit();},
+            values: [{l: "", ban: "Vuoi eliminare la squadra? (perderai giocatori, partite e informazioni)", t: "confirm"}]
+        },
+        {
+            n: "Aggiungi Giocatore",
+            f: v => {API.addGiocatore({Squadra: id, ...v}); feedback();}, 
+            values: [
+                {l: "Nome", t: "text", k: "Nome"},
+                {l: "Cognome", t: "text", k: "Cognome"},
+                {l: "Link immagine", t: "text", k: "img"}
+            ]
+        },
+        {
+            n: "Modifica Giocatore",
+            f: v => {API.updateGiocatore(getId(), v); feedback();}, 
+            values: [
+                {l: "Nome", t: "text", k: "Nome"},
+                {l: "Cognome", t: "text", k: "Cognome"},
+                {l: "Link immagine", t: "text", k: "img"}
+            ]
+        },
+        {
+            n: "Elimina Giocatore", ban: true,
+            f: v => {API.deleteGiocatore(getId()); feedback();},
+            values: [{l: "", ban: "Vuoi eliminare il giocatore? (perderai goal, cartellini e voti associati)", t: "confirm"}]
+        },
+    ];
+}
+
 const updateNotizia = async (id, feedback, goBack) => {
     return [
         {
@@ -197,6 +238,25 @@ const updateNotizia = async (id, feedback, goBack) => {
     ];
 }
 
+const updateAds = async (getId, feedback) => {
+    return [
+        {
+            n: "Modifica Pubblicità",
+            f: v => {API.updateAd(getId(), v); feedback();}, 
+            values: [
+                {l: "Testo", t: "text", k: "txt"},
+                {l: "Link immagine", t: "text", k: "img"},
+                {l: "Link sito", t: "text", k: "link"},
+            ]
+        },
+        {
+            n: "Elimina Pubblicità", ban: true,
+            f: v => {API.deleteAd(getId()); feedback();},
+            values: [{l: "", ban: "Vuoi eliminare la pubblicità?", t: "confirm"}]
+        },
+    ];
+}
 
 
-export { a_AreaRiservata, updatePartita, putSquadra, updateNotizia };
+
+export { a_AreaRiservata, updatePartita, updateSquadra, putSquadra, updateNotizia, updateAds };

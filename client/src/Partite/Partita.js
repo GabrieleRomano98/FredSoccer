@@ -3,9 +3,9 @@ import { Button, Card, Carousel, Spinner } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import { AiOutlineDelete, AiOutlineEdit, AiFillMobile } from "react-icons/ai";
 import { Link, useHistory } from "react-router-dom";
-import { MyModal } from "./MyModal";
-import { updatePartita } from "./actions";
-import  API from "./API";
+import { MyModal } from "../MyModal";
+import { updatePartita } from "../actions";
+import  API from "../API";
 
 const PartitaRow = props => (<>
     <Link to={"/Squadra/" + props.id} className="squadra"><u><h5>{props.t}</h5></u></Link><h3>{props.g}</h3>
@@ -52,7 +52,7 @@ function Partita(props) {
 		};
         const getActions = async () => {
             if(!actions) {
-                const a = await updatePartita(props.id, g => g.Squadra === idSquadra, a => 1, getID, () => {history.push("/Partite"); setDirty(true);});
+                const a = await updatePartita(props.id, g => g.Squadra === idSquadra, a => 1, getID, () => {history.push("/Partite"); setDirty(d => !d);});
                 setActions(a);
             }
 		};
