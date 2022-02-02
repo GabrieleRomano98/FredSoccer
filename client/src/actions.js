@@ -121,7 +121,7 @@ const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
         },
         {
             n: "Aggiungi Reti",
-            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Rete", ...v}); feedback("Rete aggiunta")}, 
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), _Key: "Rete", ...v}); feedback("Rete aggiunta")}, 
             values: [
                 {l: "Minuto", t: "number", k: "Minuto"},
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
@@ -137,11 +137,11 @@ const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
         },
         {
             n: "Aggiungi Cartellini",
-            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Cartellino", ...v}); feedback("Cartellino aggiunto")}, 
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), _Key: "Cartellino", ...v}); feedback("Cartellino aggiunto")}, 
             values: [
                 {l: "Minuto", t: "number", k: "Minuto"},
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
-                {l: "Tipo", t: "select", k: "Value", options: [{id: '0', Nome: "Rosso"}, {id: '1', Nome: "Giallo"}], filt: () => 1},
+                {l: "Tipo", t: "select", k: "_Value", options: [{id: '0', Nome: "Rosso"}, {id: '1', Nome: "Giallo"}], filt: () => 1},
             ]
         },
         {
@@ -150,15 +150,15 @@ const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
             values: [
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
                 {l: "Minuto", t: "number", k: "Minuto"},
-                {l: "Tipo", t: "select", k: "Value", options: [{id: 1, Nome: "Giallo"}, {id: 0, Nome: "Rosso"}], filt: () => 1},
+                {l: "Tipo", t: "select", k: "_Value", options: [{id: 1, Nome: "Giallo"}, {id: 0, Nome: "Rosso"}], filt: () => 1},
             ]
         },
         {
             n: "Aggiungi Pagelle",
-            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), Key: "Voto", ...v}); feedback("Voto aggiunto")}, 
+            f: v => {API.addPartitaMeta({id: id, id_partita: getID(), _Key: "Voto", ...v}); feedback("Voto aggiunto")}, 
             values: [
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
-                {l: "Voto", t: "number", k: "Value"},
+                {l: "Voto", t: "number", k: "_Value"},
             ]
         },
         {
@@ -166,7 +166,7 @@ const updatePartita = async (id, checkSquadra, feedback, getID, goBack) => {
             f: v => {API.updatePartitaMeta(getID(), v); feedback("Voto modificatao");}, 
             values: [
                 {l: "Giocatore", t: "select", k: "id_giocatore", options: g, filt: checkSquadra},
-                {l: "Voto", t: "number", k: "Value"},
+                {l: "Voto", t: "number", k: "_Value"},
             ]
         },
         {

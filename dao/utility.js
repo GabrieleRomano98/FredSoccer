@@ -237,7 +237,7 @@ exports.getQuerySQL = async (db, sql, values = [], objDef = {}, returnFail = nul
     return new Promise((resolve, reject) => {
 
         if (single) {
-            db.get(sql, [...values], (err, row) => {
+            db.query(sql, [...values], (err, row) => {
 
                 if (err || !row) {
                     if (err) {
@@ -247,14 +247,14 @@ exports.getQuerySQL = async (db, sql, values = [], objDef = {}, returnFail = nul
                 }
                 else {
                     if (this.isEmptyObject(objDef))
-                        resolve({ ...row });
+                        resolve({ ...row[0] });
                     else
-                        resolve({ ...this.filter_args(objDef, row) });
+                        resolve({ ...this.filter_args(objDef, row[0]) });
                 }
             });
         }
         else {
-            db.all(sql, [...values], (err, rows) => {
+            db.query(sql, [...values], (err, rows) => {
 
                 if (err || !rows) {
                     console.log(err)
@@ -273,7 +273,7 @@ exports.runQuerySQL = async (db, sql, values = [], res = false) => {
 
     return new Promise((resolve, reject) => {
 
-        db.run(sql, [...values], function (err) {
+        db.query(sql, [...values], function (err) {
 
             if (err) {
                 reject(err);

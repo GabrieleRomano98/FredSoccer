@@ -19,7 +19,7 @@ const BaseCard = props => (
         <Row className="mt-1 mb-4">
             <Col align="center" xs="5"><props.left/></Col>
             <Col align="center"><props.center/></Col>
-            <Col align="center"><props.right/></Col>
+            <Col align="center" xs="5"><props.right/></Col>
         </Row>
     </Card>
 );

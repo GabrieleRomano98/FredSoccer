@@ -9,7 +9,7 @@ const getClassifica = async (t, id = false) => {
     const sql = "SELECT s.id, s.Nome, " + (!!id ? "s.img, " : "")
         + "3*" + base + "(p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) +"
         + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS PT,"
-        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND NOT g_s1 ISNULL) AS PG,"
+        + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND NOT g_s1 IS NULL) AS PG,"
         + base + " (p.id_s1 = s.id AND p.g_s1 > p.g_s2 OR p.id_s2 = s.id AND p.g_s2 > p.g_s1)) AS V,"
         + base + " (p.id_s1 = s.id OR p.id_s2 = s.id) AND p.g_s1 = p.g_s2) AS P,"
         + base + " (p.id_s1 = s.id AND p.g_s1 < p.g_s2 OR p.id_s2 = s.id AND p.g_s2 < p.g_s1)) AS S,"
@@ -26,9 +26,9 @@ const getClassifica = async (t, id = false) => {
 const getGiocatori = async (id = false) => {
     const sql = !id ? "SELECT id, Cognome, Squadra FROM Giocatori" 
         : "SELECT id, Nome, Cognome, img, "
-        + "(SELECT COUNT(*) FROM Partita_meta WHERE Key = 'Rete' AND id_giocatore = id) AS Reti, "
-        + "(SELECT COUNT(*) FROM Partita_meta WHERE Key = 'Voto' AND id_giocatore = id) AS Presenze, "
-        + "(SELECT AVG(VALUE) FROM Partita_meta WHERE Key = 'Voto' AND id_giocatore = id) AS Media "
+        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Rete' AND id_giocatore = id) AS Reti, "
+        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = id) AS Presenze, "
+        + "(SELECT AVG(_Value) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = id) AS Media "
         + "FROM Giocatori WHERE Squadra = ? ";
     const obj = !id ? {id:0, Cognome: "", Squadra: 0} : { id: 0, Nome: "", Cognome: "", img: "", Reti: 0, Presenze: 0, Media: 0 };
     const par = !id ? [] : [id];

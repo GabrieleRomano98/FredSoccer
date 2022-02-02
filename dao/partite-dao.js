@@ -14,10 +14,10 @@ const getPartite = async (tournament = 1, idP = false, idS = false) => {
 }
 
 const getInfoPartita = async id => {
-    const sql = "SELECT id, (SELECT Cognome FROM Giocatori WHERE id = id_giocatore) AS Giocatore, Key, Minuto, Value, "
+    const sql = "SELECT id, (SELECT Cognome FROM Giocatori WHERE id = id_giocatore) AS Giocatore, _Key, Minuto, _Value, "
         + "(SELECT id_s1 FROM Partite WHERE id = ?) = (SELECT Squadra FROM Giocatori WHERE id = id_giocatore) AS s1 "
         + "FROM Partita_meta WHERE id_partita = ? ";
-    const obj = { id: 0, Giocatore: "", Key: "", Minuto: 0, Value: 0, s1: 0 };
+    const obj = { id: 0, Giocatore: "", _Key: "", Minuto: 0, _Value: 0, s1: 0 };
     return await getQuerySQL(db, sql, [id, id], obj, false, false);
 }
 
@@ -114,8 +114,8 @@ exports.execAPI = (app, isLoggedIn) =>{
 
     app.post("/api/Partita/Meta", isLoggedIn, async (req, res) => {
         try {
-            const sql = "INSERT INTO Partita_meta (id_partita, id_giocatore, Minuto, Key, Value) VALUES(?, ?, ?, ?, ?)";
-            const par = [req.body.id_partita, req.body.id_giocatore, req.body.Minuto, req.body.Key, req.body.Value];
+            const sql = "INSERT INTO Partita_meta (id_partita, id_giocatore, Minuto, _Key, _Value) VALUES(?, ?, ?, ?, ?)";
+            const par = [req.body.id_partita, req.body.id_giocatore, req.body.Minuto, req.body._Key, req.body._Value];
             runQuerySQL(db, sql, par, false);
             res.status(201).end();
         } catch (err) {
