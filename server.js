@@ -138,6 +138,8 @@ app.get("/api/user/:id", (req, res) => {
   }
 });
 
+setInterval(() => console.log("Still alive"), 5000);
+
 // POST /api/newUser
 app.post(
   "/api/newUser",
