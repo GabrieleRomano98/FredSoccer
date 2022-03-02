@@ -26,10 +26,10 @@ const getClassifica = async (t, id = false) => {
 const getGiocatori = async (id = false) => {
     const sql = !id ? "SELECT id, Cognome, Squadra FROM Giocatori" 
         : "SELECT id, Nome, Cognome, img, "
-        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Rete' AND id_giocatore = id) AS Reti, "
-        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = id) AS Presenze, "
-        + "(SELECT AVG(_Value) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = id) AS Media "
-        + "FROM Giocatori WHERE Squadra = ? ";
+        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Rete' AND id_giocatore = g.id) AS Reti, "
+        + "(SELECT COUNT(*) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = g.id) AS Presenze, "
+        + "(SELECT AVG(_Value) FROM Partita_meta WHERE _Key = 'Voto' AND id_giocatore = g.id) AS Media "
+        + "FROM Giocatori g WHERE Squadra = ? ";
     const obj = !id ? {id:0, Cognome: "", Squadra: 0} : { id: 0, Nome: "", Cognome: "", img: "", Reti: 0, Presenze: 0, Media: 0 };
     const par = !id ? [] : [id];
     return await getQuerySQL(db, sql, par, obj, false, false);
